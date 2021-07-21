@@ -193,7 +193,7 @@ ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	$(INSTALL) -d $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 	$(INSTALL_DATA) doc/Readme-for-installed-CompCert-files $(DESTDIR)$(CPRINTERDIR)/compcertcprinter/README
 	$(INSTALL_DATA) compcertcprinter.cmxa compcertcprinter.a $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
-	$(INSTALL_DATA) $(file < compcertcprinter-cmi) $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
+	$(INSTALL_DATA) `cat compcertcprinter-cmi` $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 endif
 endif
 
