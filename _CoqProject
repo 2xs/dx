@@ -1,0 +1,2 @@
+-R src dx
+-R tests dx.tests

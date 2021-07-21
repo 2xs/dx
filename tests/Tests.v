@@ -1,0 +1,114 @@
+(**************************************************************************)
+(*  This file is part of dx, a tool to derive C from monadic Gallina.     *)
+(*                                                                        *)
+(*  Copyright (C) 2021 Université de Lille & CNRS                         *)
+(*                                                                        *)
+(*  This program is free software; you can redistribute it and/or modify  *)
+(*  it under the terms of the GNU General Public License as published by  *)
+(*  the Free Software Foundation; either version 2 of the License, or     *)
+(*  (at your option) any later version.                                   *)
+(*                                                                        *)
+(*  This program is distributed in the hope that it will be useful,       *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU General Public License for more details.                          *)
+(**************************************************************************)
+
+From Coq Require Import BinNums List Ascii String Nat ZArith.
+From Coq Require Import Numbers.AltBinNotations.
+Import List.ListNotations.
+
+From compcert.cfrontend Require Csyntax Ctypes.
+From compcert.common Require Errors.
+
+From dx Require Import ResultMonad IR CoqIR IRtoC DXModule DumpAsC.
+From dx.Type Require Import Bool Nat.
+
+Open Scope string.
+
+Definition state := nat.
+
+Definition M (A: Type) := state -> option (A * state).
+
+Definition runM {A: Type} (x: M A) (s: state) := x s.
+Definition returnM {A: Type} (a: A) : M A := fun s => Some (a, s).
+Definition emptyM {A: Type} : M A := fun s => None.
+Definition bindM {A B: Type} (x: M A) (f: A -> M B) : M B :=
+  fun s =>
+    match runM x s with
+    | None => None
+    | Some (x', s') => runM (f x') s'
+    end.
+
+Definition get : M state := fun s => Some (s, s).
+Definition put (s: state) : M unit := fun s' => Some (tt, s).
+
+Declare Scope monad_scope.
+Notation "'do' x <- a ; b" :=
+  (bindM a (fun x => b))
+    (at level 200, x name, a at level 100, b at level 200)
+  : monad_scope.
+
+Open Scope monad_scope.
+
+Definition ready : M bool :=
+  do s <- get ;
+     returnM (even s).
+
+Definition getReady : M unit :=
+  do s <- get ;
+     if even s
+     then returnM tt
+     else do _ <- put (S s) ;
+             returnM tt.
+
+Definition id (b : bool) : M bool := returnM b.
+
+Definition neg (b : bool) : M bool := if b then returnM false else returnM true.
+
+Definition emptyUnitM := @emptyM unit.
+
+Fixpoint prepare recBound : M unit :=
+  match recBound with
+  | O   => emptyUnitM
+  | S b => do r <- ready ;
+              if r
+              then returnM tt
+              else do _ <- getReady ;
+                      prepare b
+  end.
+
+Module ModTest.
+Definition testId (b : bool) : M bool := returnM b.
+End ModTest.
+
+Definition boolToBoolType := MkCompilableSymbolType [boolCompilableType] (Some boolCompilableType).
+Definition derivableId := MkDerivableSymbol M "id" true boolToBoolType id false.
+
+Definition externEmptyUnitM := MkDerivableSymbol M "emptyUnitM" true (MkCompilableSymbolType [] None) emptyUnitM true.
+Definition externReady := MkDerivableSymbol M "ready" true boolSymbolType ready true.
+Definition externGetReady := MkDerivableSymbol M "getReady" true (MkCompilableSymbolType [] None) getReady true.
+
+Definition derivableNeg := MkDerivableSymbol M "neg" true boolToBoolType neg false.
+
+Axiom axiom : nat.
+
+Close Scope monad_scope.
+
+(***************************************)
+
+GenerateIntermediateRepresentation SymbolIRs
+  M bindM returnM
+  boolMatchableType boolFalse boolTrue
+  derivableId
+  natMatchableType natO
+  axiom
+  __
+  neg
+  ModTest
+  externEmptyUnitM
+  externReady
+  externGetReady
+  prepare.
+
+Definition dxModuleTest := makeDXModuleWithoutMain SymbolIRs.
