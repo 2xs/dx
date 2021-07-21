@@ -22,7 +22,7 @@ From compcert.cfrontend Require Csyntax Ctypes.
 From compcert.common Require Errors.
 
 From dx Require Import ResultMonad IR CoqIR IRtoC DXModule DumpAsC.
-From dx.Type Require Import Bool Nat.
+From dx.Type Require Bool Nat.
 
 Open Scope string.
 
@@ -82,11 +82,11 @@ Module ModTest.
 Definition testId (b : bool) : M bool := returnM b.
 End ModTest.
 
-Definition boolToBoolType := MkCompilableSymbolType [boolCompilableType] (Some boolCompilableType).
+Definition boolToBoolType := MkCompilableSymbolType [Bool.boolCompilableType] (Some Bool.boolCompilableType).
 Definition derivableId := MkDerivableSymbol M "id" true boolToBoolType id false.
 
 Definition externEmptyUnitM := MkDerivableSymbol M "emptyUnitM" true (MkCompilableSymbolType [] None) emptyUnitM true.
-Definition externReady := MkDerivableSymbol M "ready" true boolSymbolType ready true.
+Definition externReady := MkDerivableSymbol M "ready" true Bool.boolSymbolType ready true.
 Definition externGetReady := MkDerivableSymbol M "getReady" true (MkCompilableSymbolType [] None) getReady true.
 
 Definition derivableNeg := MkDerivableSymbol M "neg" true boolToBoolType neg false.
@@ -99,9 +99,9 @@ Close Scope monad_scope.
 
 GenerateIntermediateRepresentation SymbolIRs
   M bindM returnM
-  boolMatchableType boolFalse boolTrue
+  Bool.Exports
+  Nat.Exports
   derivableId
-  natMatchableType natO
   axiom
   __
   neg
