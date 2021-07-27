@@ -193,6 +193,9 @@ ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	$(INSTALL_DATA) doc/Readme-for-installed-CompCert-files $(DESTDIR)$(CPRINTERDIR)/compcertcprinter/README
 	$(INSTALL_DATA) compcertcprinter.cmxa compcertcprinter.a $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 	$(INSTALL_DATA) `cat compcertcprinter-cmi` $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
+	cd $(COMPCERTSRCDIR) && \
+	    $(INSTALL_DATA) `tools/modorder .depend.extr cfrontend/PrintCsyntax.cmx` \
+	         $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 	$(INSTALL_DATA) $(COMPCERTSRCDIR)/compcert.ini $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 endif
 endif
