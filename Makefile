@@ -49,7 +49,7 @@ INSTALLEDOCAMLFILES := $(addprefix extr/,$(addsuffix .cmi,$(EXTRACTEDMODULES)) \
 INSTALLEDOCAMLFILES += src/DumpAsC.cmi src/DumpAsC.cmx src/DumpAsC.o
 
 ifneq ($(strip $(CPRINTERDIR)),)
-INSTALLDEPS += $(INSTALLEDOCAMLFILES) cprinter-args
+INSTALLDEPS += $(INSTALLEDOCAMLFILES) cprinter-inc-args cprinter-link-args
 ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 INSTALLDEPS += compcertcprinter.cmxa compcertcprinter.a
 endif
@@ -119,23 +119,21 @@ compcertcprinter-cmi:
 	            /cmx/ { gsub("cmx$$","cmi") ; print "$(COMPCERTSRCDIR)/" $$0 }' > $@
 
 ifneq ($(strip $(CPRINTERDIR)),)
-cprinter-args: compcertsrc-I compcertcprinter-cmx-args
+cprinter-inc-args: compcertsrc-I
 	printf -- '-I\n%s\n' "$(CPRINTERDIR)" > $@
-
 ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	printf -- '-I\n%s\n' "$(CPRINTERDIR)/compcertcprinter" >> $@
 else
 	cat compcertsrc-I >> $@
 endif
 
+cprinter-link-args: compcertcprinter-cmx-args
 	printf 'str.cmxa\nunix.cmxa\n' >> $@
-
 ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	printf 'compcertcprinter.cmxa\n' >> $@
 else
 	cat compcertcprinter-cmx-args >> $@
 endif
-
 	printf 'ResultMonad.cmx\nDXModule.cmx\nDumpAsC.cmx\n' >> $@
 
 INSTALLDEPS += compcertcprinter-cmi
@@ -151,7 +149,7 @@ tests/main: extr/ResultMonad.cmx extr/DXModule.cmx src/DumpAsC.cmx tests/TestMai
 
 ifneq ($(strip $(CPRINTERDIR)),)
 tests/main-after-install: tests/TestMain.cmx tests/TestMain.o
-	$(OCAMLOPT) -args $(CPRINTERDIR)/cprinter-args $< -o $@
+	$(OCAMLOPT) -args $(CPRINTERDIR)/cprinter-inc-args -args $(CPRINTERDIR)/cprinter-link-args $< -o $@
 endif
 
 tests/generated.c: tests/main tests/compcert.ini
@@ -188,7 +186,8 @@ install: $(INSTALLDEPS)
 
 ifneq ($(strip $(CPRINTERDIR)),)
 	$(INSTALL) -d $(DESTDIR)$(CPRINTERDIR)
-	$(INSTALL_DATA) $(INSTALLEDOCAMLFILES) cprinter-args $(DESTDIR)$(CPRINTERDIR)
+	$(INSTALL_DATA) $(INSTALLEDOCAMLFILES) $(DESTDIR)$(CPRINTERDIR)
+	$(INSTALL_DATA) cprinter-inc-args cprinter-link-args $(DESTDIR)$(CPRINTERDIR)
 ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	$(INSTALL) -d $(DESTDIR)$(CPRINTERDIR)/compcertcprinter
 	$(INSTALL_DATA) doc/Readme-for-installed-CompCert-files $(DESTDIR)$(CPRINTERDIR)/compcertcprinter/README
@@ -211,7 +210,8 @@ clean:
 	rm -f extr/*.ml extr/*.mli tests/*.ml tests/*.mli
 	rm -f */*.cmi */*.cmx */*.o
 	rm -f tests/compcert.ini tests/main tests/generated.c tests/main-after-install
-	rm -f compcertsrc-I compcertcprinter-cmx-args compcertcprinter-cmi cprinter-args
+	rm -f compcertsrc-I compcertcprinter-cmx-args compcertcprinter-cmi
+	rm -f cprinter-inc-args cprinter-link-args
 	rm -f compcertcprinter.cmxa compcertcprinter.a
 	rm -f .depend.coq
 	rm -f .lia.cache
