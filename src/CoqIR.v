@@ -212,7 +212,7 @@ Elpi Accumulate lp:{{
   matchArgType (match _ (fun _ (global T) _) _) T.
 
   pred handleExpression i:configuration, i:term, i:term, o:term.
-  :if "trace_handleExpression" handleExpression _ X Y _ :- coq.say "handleExpression" X Y, fail.
+  :if "trace_handleExpression" handleExpression _ _ X _ :- coq.say "handleExpression:" { coq.term->string X }, fail.
   handleExpression (cfg _ _ _ _ PGs _) _ (global Prim) {{ ePrim lp:CPrim (@nil Expression) }} :-
     coq.gref.map.find Prim PGs (pgPrimitive CPrim), !.
   handleExpression (cfg _ _ _ _ PGs _ as Cfg) _ (app (global Prim :: Args)) {{ ePrim lp:CPrim lp:CArgs }} :-
@@ -235,7 +235,7 @@ Elpi Accumulate lp:{{
   handleExpression _ Typ Trm _ :- coq.say "Fail with expression" Typ Trm, fail.
 
   pred handleSubExpressions i:configuration, i:term, i:list term, o:term.
-  :if "trace_handleSubExpressions" handleSubExpressions _ X Y _ :- coq.say "handleSubExpressions" X Y, fail.
+  :if "trace_handleSubExpressions" handleSubExpressions _ _ X _ :- coq.say "handleSubExpressions:" { std.map coq.term->string X }, fail.
   handleSubExpressions Cfg STyp Args CArgs :-
     resolveConst STyp (app [{{ MkCompilableSymbolType }}, ArgTyps, _]),
     resolveConst ArgTyps LArgs,
@@ -244,7 +244,7 @@ Elpi Accumulate lp:{{
     list->coqlist {{ Expression }} EArgs CArgs.
 
   pred handleMatchBranch i:configuration, i:term, i:int, i:list name, o:term, o:term, o:int, o:list name.
-  :if "trace_handleMatchBranch" handleMatchBranch _ X _ _ _ _ _ _ :- coq.say "handleMatchBranch" X, fail.
+  :if "trace_handleMatchBranch" handleMatchBranch _ X _ _ _ _ _ _ :- coq.say "handleMatchBranch:" { coq.term->string X }, fail.
   handleMatchBranch Cfg (fun Z Typ (_\B)) I XNs
     {{@cons MatchedLocalId (@pair TypedLocalId UsedBinding (@pair LocalId CompilableType lp:K lp:CTyp) false) lp:Vs}} Y J (Z::ZNs) :-
     !, % cut since we know we don’t need the argument
@@ -269,7 +269,7 @@ Elpi Accumulate lp:{{
     handleMatchBranches Cfg Bs L VNs Xs J YNs.
 
   pred handleStatement i:configuration, i:term, i:int, i:list name, o:term, o:int, o:list name.
-  :if "trace_handleStatement" handleStatement _ T _ _ _ _ _ :- coq.say "handleStatement" T, fail.
+  :if "trace_handleStatement" handleStatement _ X _ _ _ _ _ :- coq.say "handleStatement:" { coq.term->string X }, fail.
   handleStatement (cfg _ _ Ret _ _ _)        (app [Ret, _, {{ tt }}]) I XNs {{ sPure (@None Expression) }}        I XNs :-
     !.
   handleStatement (cfg _ _ Ret _ _ _ as Cfg) (app [Ret, Typ, V])      I XNs {{ sPure (@Some Expression lp:Exp) }} I XNs :-
@@ -305,12 +305,12 @@ Elpi Accumulate lp:{{
 
   % TODO? Remove the o:int, if not needed to continue computation
   pred handleFun i:configuration, i:term, i:int, i:list name, o:term, o:int, o:list name.
-  :if "trace_handleFun" handleFun _ X _ _ _ _ _ :- coq.say "handleFun" X, fail.
+  :if "trace_handleFun" handleFun _ X _ _ _ _ _ :- coq.say "handleFun:" { coq.term->string X }, fail.
   handleFun Cfg (fun Y _ F) I XNs S J (Y::YNs) :- !, K is I + 1, handleFun Cfg (F (localid I)) K XNs S J YNs.
   handleFun Cfg Body        I XNs S J     YNs  :- handleStatement Cfg Body I XNs S J YNs.
 
   pred handleFixAndFun i:configuration, i:gref, i:term, i:int, i:list name, o:term, o:int, o:list name, o:term.
-  :if "trace_handleFixAndFun" handleFixAndFun _ _ X _ _ _ _ _ _ :- coq.say "handleFixAndFun" X, fail.
+  :if "trace_handleFixAndFun" handleFixAndFun _ _ X _ _ _ _ _ _ :- coq.say "handleFixAndFun:" { coq.term->string X }, fail.
   handleFixAndFun Cfg Name (fix _ R _ B) I XNs S J YNs {{ Fix lp:N }} :- !,
     int->nat R N,
     handleFun Cfg (B (global Name)) I XNs S J YNs.
@@ -321,7 +321,7 @@ Elpi Accumulate lp:{{
   % (otherwise something really fishy is happening; on the other hand, the
   % output should be verified anyway)
   pred deriveSymbol i:configuration, i:term, o:term.
-  :if "trace_deriveSymbol" deriveSymbol _ X _ :- coq.say "deriveSymbol" X, fail.
+  :if "trace_deriveSymbol" deriveSymbol _ X _ :- coq.say "deriveSymbol:" { coq.term->string X }, fail.
   deriveSymbol Cfg (app [{{MkDerivableSymbol}}, _Mn, N, M, T, C, {{ true }}])
                    (app [{{MkIRSymbol}},             N, GId, {{ @nil string }}, M, T, {{ None }}, {{ Nofix }}]) :-
       !,
@@ -371,6 +371,7 @@ Elpi Accumulate lp:{{
   pred oneBuildTermTypeMaps i:configuration,
                             i:int, i:coq.gref.map primitiveOrGlobal, i:coq.gref.map compilableOrMatchable, i: term,
                             o:int, o:coq.gref.map primitiveOrGlobal, o:coq.gref.map compilableOrMatchable, o: option term.
+  :if "trace_oneBuildTermTypeMaps" oneBuildTermTypeMaps _ _ _ _ X _ _ _ _ :- coq.say "oneBuildTermTypeMaps:" { coq.term->string X }, fail.
   oneBuildTermTypeMaps _ I PGs CMs (app [{{MkDerivableSymbol}}, _, _, _, STyp, global Sym, _] as Exp) J PGs2 CMs (some Exp) :-
     !,
     coq.gref.map.add Sym (pgGlobal I STyp) PGs PGs2,
