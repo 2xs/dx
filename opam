@@ -8,7 +8,7 @@ license: "GPL-2.0-or-later"
 depends: [
   "coq" {>= "8.13"}
   "coq-compcert" {>= "3.9"}
-  "coq-elpi" {>= "1.8.1"}
+  "coq-elpi" {>= "1.9.5"}
 ]
 build: [
   [ "./configure" "--cprinterdir=%{lib}%/dx" "--install-compcert-printer" ]

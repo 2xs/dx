@@ -423,7 +423,7 @@ Elpi Accumulate lp:{{
 
   %% Debugging
   buildTermTypeMaps PreCfg I PGs CMs (X :: Ts) J PGs2 CMs2 Exps :-
-    coq.warn "Cannot convert the following term: skipping" { coq.term->string X },
+    coq.warning "dx" "dx.inconvertible" "Cannot convert, skipping:" { coq.term->string X },
     buildTermTypeMaps PreCfg I PGs CMs Ts J PGs2 CMs2 Exps.
 
   pred buildConfigAndFilterArgs i:list argument, o:configuration, o:list term.
