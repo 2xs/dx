@@ -52,12 +52,23 @@ Definition boolTrue  :=
 Definition boolToBoolSymbolType :=
   MkCompilableSymbolType [boolCompilableType] (Some boolCompilableType).
 
+Definition boolToBoolToBoolSymbolType :=
+  MkCompilableSymbolType [boolCompilableType;boolCompilableType] (Some boolCompilableType).
+
 Definition boolNeg :=
   MkPrimitive boolToBoolSymbolType
               negb
               (fun es => match es with
-                         | (e :: nil) => Ok (Csyntax.Eunop Cop.Onotbool e Ctypes.type_bool)
-                         | _          => Err PrimitiveEncodingFailed
+                         | [e] => Ok (Csyntax.Eunop Cop.Onotbool e Ctypes.type_bool)
+                         | _   => Err PrimitiveEncodingFailed
+                         end).
+
+Definition boolOr :=
+  MkPrimitive boolToBoolToBoolSymbolType
+              orb
+              (fun es => match es with
+                         | [e1;e2] => Ok (Csyntax.Eseqor e1 e2 Ctypes.type_bool)
+                         | _       => Err PrimitiveEncodingFailed
                          end).
 
 (* TODO: Add Eq, etc. *)
@@ -67,4 +78,5 @@ Module Exports.
   Definition boolFalse := boolFalse.
   Definition boolTrue := boolTrue.
   Definition boolNeg := boolNeg.
+  Definition boolOr := boolOr.
 End Exports.
