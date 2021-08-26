@@ -372,6 +372,10 @@ Elpi Accumulate lp:{{
                             i:int, i:coq.gref.map primitiveOrGlobal, i:coq.gref.map compilableOrMatchable, i: term,
                             o:int, o:coq.gref.map primitiveOrGlobal, o:coq.gref.map compilableOrMatchable, o: option term.
   :if "trace_oneBuildTermTypeMaps" oneBuildTermTypeMaps _ _ _ _ X _ _ _ _ :- coq.say "oneBuildTermTypeMaps:" { coq.term->string X }, fail.
+  oneBuildTermTypeMaps _ I PGs CMs (app [{{MkDerivableSymbol}}, _, _, _, _, global Sym, _]) I PGs CMs none :-
+    coq.gref.map.mem Sym PGs,
+    !,
+    coq.warning "dx" "dx.duplicate" "Skip symbol already seen:" { coq.term->string (global Sym) }.
   oneBuildTermTypeMaps _ I PGs CMs (app [{{MkDerivableSymbol}}, _, _, _, STyp, global Sym, _] as Exp) J PGs2 CMs (some Exp) :-
     !,
     coq.gref.map.add Sym (pgGlobal I STyp) PGs PGs2,
