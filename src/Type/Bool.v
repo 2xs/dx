@@ -71,6 +71,14 @@ Definition boolOr :=
                          | _       => Err PrimitiveEncodingFailed
                          end).
 
+Definition boolAnd :=
+  MkPrimitive boolToBoolToBoolSymbolType
+              andb
+              (fun es => match es with
+                         | [e1;e2] => Ok (Csyntax.Eseqand e1 e2 Ctypes.type_bool)
+                         | _       => Err PrimitiveEncodingFailed
+                         end).
+
 (* TODO: Add Eq, etc. *)
 
 Module Exports.
@@ -79,4 +87,5 @@ Module Exports.
   Definition boolTrue := boolTrue.
   Definition boolNeg := boolNeg.
   Definition boolOr := boolOr.
+  Definition boolAnd := boolAnd.
 End Exports.
