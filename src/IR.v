@@ -111,6 +111,12 @@ Record Primitive := MkPrimitive
      the definition of semantics for each of the primitives? *)
   }.
 
+Definition constant ty coqI cI :=
+  MkPrimitive ty coqI (fun es => match es with
+                                 | nil => Ok cI
+                                 | _   => Err PrimitiveEncodingFailed
+                                 end).
+
 (* **Pure** expressions *)
 (* A local identifier can only be of "base" type, which means it cannot be a
    function *)

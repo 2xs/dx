@@ -41,13 +41,9 @@ Definition boolMatchableType :=
 .
 
 Definition boolFalse :=
-  MkPrimitive boolSymbolType
-              false
-              (fun _ => Ok (Csyntax.Eval Values.Vfalse Ctypes.type_bool)).
+  constant boolSymbolType false (Csyntax.Eval Values.Vfalse Ctypes.type_bool).
 Definition boolTrue  :=
-  MkPrimitive boolSymbolType
-              true
-              (fun _ => Ok (Csyntax.Eval Values.Vtrue Ctypes.type_bool)).
+  constant boolSymbolType true (Csyntax.Eval Values.Vtrue Ctypes.type_bool).
 
 Definition boolToBoolSymbolType :=
   MkCompilableSymbolType [boolCompilableType] (Some boolCompilableType).

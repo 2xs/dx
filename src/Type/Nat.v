@@ -59,8 +59,7 @@ Definition natMatchableType :=
     (fun m A n whenO whenS =>
       match n with O => whenO | S n' => whenS n' end).
 
-Definition natO :=
-  MkPrimitive natSymbolType O (fun _ => Ok zero).
+Definition natO := constant natSymbolType O zero.
 
 Module Exports.
   Definition natMatchableType := natMatchableType.
