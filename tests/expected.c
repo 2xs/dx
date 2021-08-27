@@ -15,18 +15,18 @@ _Bool id(_Bool b)
 
 extern unsigned int const axiom;
 
-_Bool neg(_Bool b)
+_Bool neg(_Bool b$10)
 {
-  if (b) {
+  if (b$10) {
     return 0;
   } else {
     return 1;
   }
 }
 
-_Bool testId(_Bool b)
+_Bool testId(_Bool b$11)
 {
-  return b;
+  return b$11;
 }
 
 extern void emptyUnitM(void);
@@ -37,19 +37,19 @@ extern void getReady(void);
 
 void prepare(unsigned int recBound)
 {
-  unsigned int b;
+  unsigned int b$13;
   _Bool r;
   if (recBound == 0U) {
     emptyUnitM();
     return;
   } else {
-    b = recBound - 1U;
+    b$13 = recBound - 1U;
     r = ready();
     if (r) {
       return;
     } else {
       getReady();
-      prepare(b);
+      prepare(b$13);
       return;
     }
   }
