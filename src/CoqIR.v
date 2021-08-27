@@ -142,7 +142,8 @@ Elpi Accumulate lp:{{
   pred names->coqliststring i:list name, o:term.
   names->coqliststring Ns LNs :-
     std.map Ns name->coqstring Ss,
-    list->coqlist {{ string }} Ss LNs.
+    std.rev Ss RSs,
+    list->coqlist {{ string }} RSs LNs.
 
   % Hack full modules into terms, to handle them uniformly...
   type fullModule modpath -> term.
@@ -245,20 +246,20 @@ Elpi Accumulate lp:{{
 
   pred handleMatchBranch i:configuration, i:term, i:int, i:list name, o:term, o:term, o:int, o:list name.
   :if "trace_handleMatchBranch" handleMatchBranch _ X _ _ _ _ _ _ :- coq.say "handleMatchBranch:" { coq.term->string X }, fail.
-  handleMatchBranch Cfg (fun Z Typ (_\B)) I XNs
-    {{@cons MatchedLocalId (@pair TypedLocalId UsedBinding (@pair LocalId CompilableType lp:K lp:CTyp) false) lp:Vs}} Y J (Z::ZNs) :-
+  handleMatchBranch Cfg (fun X Typ (_\B)) I XNs
+    {{@cons MatchedLocalId (@pair TypedLocalId UsedBinding (@pair LocalId CompilableType lp:K lp:CTyp) false) lp:Vs}} Y J ZNs :-
     !, % cut since we know we don’t need the argument
     resolveCompilableType Cfg Typ CTyp,
     int->pos I K,
     L is I + 1,
-    handleMatchBranch Cfg B L XNs Vs Y J ZNs.
-  handleMatchBranch Cfg (fun Z Typ (x\B x)) I XNs
-    {{@cons MatchedLocalId (@pair TypedLocalId UsedBinding (@pair LocalId CompilableType lp:K lp:CTyp) true) lp:Vs}} Y J (Z::ZNs) :-
+    handleMatchBranch Cfg B L (X::XNs) Vs Y J ZNs.
+  handleMatchBranch Cfg (fun X Typ (x\B x)) I XNs
+    {{@cons MatchedLocalId (@pair TypedLocalId UsedBinding (@pair LocalId CompilableType lp:K lp:CTyp) true) lp:Vs}} Y J ZNs :-
     !, % cut, since we have covered all cases of fun
     resolveCompilableType Cfg Typ CTyp,
     int->pos I K,
     L is I + 1,
-    handleMatchBranch Cfg (B (localid I)) L XNs Vs Y J ZNs.
+    handleMatchBranch Cfg (B (localid I)) L (X::XNs) Vs Y J ZNs.
   handleMatchBranch Cfg B I XNs {{ @nil MatchedLocalId }} C J YNs :-
     handleStatement Cfg B I XNs C J YNs.
 
@@ -281,12 +282,12 @@ Elpi Accumulate lp:{{
     handleStatement Cfg X I XNs Y K ZNs,
     handleStatement Cfg B K ZNs C J YNs.
   handleStatement (cfg _ Bind _ _ _ _ as Cfg) (app [Bind, Typ, _, X, fun Z _ (x\B x)]) I XNs
-                  {{ sBind (@Some TypedLocalId (@pair LocalId CompilableType lp:LI lp:CTyp)) lp:Y lp:C }} J (Z :: ZNs) :-
+                  {{ sBind (@Some TypedLocalId (@pair LocalId CompilableType lp:LI lp:CTyp)) lp:Y lp:C }} J ZNs :-
     !,
     int->pos I LI,
     K is I + 1,
     resolveCompilableType Cfg Typ CTyp,
-    handleStatement Cfg X K XNs Y L YNs,
+    handleStatement Cfg X K (Z::XNs) Y L YNs,
     handleStatement Cfg (B (localid I)) L YNs C J ZNs.
   handleStatement (cfg _ _ _ _ _ CMs as Cfg) (match Exp (fun _ (global Typ as T) _) Brchs) I XNs {{ sMatch lp:MTyp lp:MExp lp:MBrchs }} J YNs :-
     !,
@@ -306,8 +307,8 @@ Elpi Accumulate lp:{{
   % TODO? Remove the o:int, if not needed to continue computation
   pred handleFun i:configuration, i:term, i:int, i:list name, o:term, o:int, o:list name.
   :if "trace_handleFun" handleFun _ X _ _ _ _ _ :- coq.say "handleFun:" { coq.term->string X }, fail.
-  handleFun Cfg (fun Y _ F) I XNs S J (Y::YNs) :- !, K is I + 1, handleFun Cfg (F (localid I)) K XNs S J YNs.
-  handleFun Cfg Body        I XNs S J     YNs  :- handleStatement Cfg Body I XNs S J YNs.
+  handleFun Cfg (fun X _ F) I XNs S J YNs :- !, K is I + 1, handleFun Cfg (F (localid I)) K (X::XNs) S J YNs.
+  handleFun Cfg Body        I XNs S J YNs :- handleStatement Cfg Body I XNs S J YNs.
 
   pred handleFixAndFun i:configuration, i:gref, i:term, i:int, i:list name, o:term, o:int, o:list name, o:term.
   :if "trace_handleFixAndFun" handleFixAndFun _ _ X _ _ _ _ _ _ :- coq.say "handleFixAndFun:" { coq.term->string X }, fail.
