@@ -26,6 +26,11 @@ Elpi Command GenerateIntermediateRepresentation.
 Elpi Accumulate lp:{{
   %%%% Utils
 
+  % Verbose info
+  pred if-verbose-info i:prop.
+  :if "VERBOSE_INFO" if-verbose-info P :- !, P.
+  if-verbose-info _.
+
   pred coqlist->list i:term, o:list term.
   coqlist->list {{ nil }} [].
   coqlist->list (app [ {{ @cons }}, _, X, Xs ]) (X :: Ys) :- coqlist->list Xs Ys.
@@ -272,15 +277,18 @@ Elpi Accumulate lp:{{
   pred handleStatement i:configuration, i:term, i:int, i:list name, o:term, o:int, o:list name.
   :if "trace_handleStatement" handleStatement _ X _ _ _ _ _ :- coq.say "handleStatement:" { coq.term->string X }, fail.
   handleStatement (cfg _ _ Ret _ _ _)        (app [Ret, _, {{ tt }}]) I XNs {{ sPure (@None Expression) }}        I XNs :-
-    !.
+    !,
+    if-verbose-info (coq.say "INFO: return statement handled").
   handleStatement (cfg _ _ Ret _ _ _ as Cfg) (app [Ret, Typ, V])      I XNs {{ sPure (@Some Expression lp:Exp) }} I XNs :-
     !,
-    handleExpression Cfg Typ V Exp.
+    handleExpression Cfg Typ V Exp,
+    if-verbose-info (coq.say "INFO: return statement handled").
   handleStatement (cfg _ Bind _ _ _ _ as Cfg) (app [Bind, _, _, X, fun _ _ (_\B)]) I XNs
                   {{ sBind (@None TypedLocalId) lp:Y lp:C }} J YNs :-
     !,
     handleStatement Cfg X I XNs Y K ZNs,
-    handleStatement Cfg B K ZNs C J YNs.
+    handleStatement Cfg B K ZNs C J YNs,
+    if-verbose-info (coq.say "INFO: bind statement handled").
   handleStatement (cfg _ Bind _ _ _ _ as Cfg) (app [Bind, Typ, _, X, fun Z _ (x\B x)]) I XNs
                   {{ sBind (@Some TypedLocalId (@pair LocalId CompilableType lp:LI lp:CTyp)) lp:Y lp:C }} J ZNs :-
     !,
@@ -288,27 +296,36 @@ Elpi Accumulate lp:{{
     K is I + 1,
     resolveCompilableType Cfg Typ CTyp,
     handleStatement Cfg X K (Z::XNs) Y L YNs,
-    handleStatement Cfg (B (localid I)) L YNs C J ZNs.
+    handleStatement Cfg (B (localid I)) L YNs C J ZNs,
+    if-verbose-info (coq.say "INFO: bind statement handled").
   handleStatement (cfg _ _ _ _ _ CMs as Cfg) (match Exp (fun _ (global Typ as T) _) Brchs) I XNs {{ sMatch lp:MTyp lp:MExp lp:MBrchs }} J YNs :-
     !,
     coq.gref.map.find Typ CMs (matchableType MTyp),
     handleExpression Cfg T Exp MExp,
-    handleMatchBranches Cfg Brchs I XNs MBrchs J YNs.
+    handleMatchBranches Cfg Brchs I XNs MBrchs J YNs,
+    if-verbose-info (coq.say "INFO: match statement handled").
   handleStatement Cfg (app (Fun :: Args)) I XNs {{ sApply lp:STyp lp:GId lp:CEArgs }} I XNs :-
     !,
     resolveId Cfg Fun GId STyp,
-    handleSubExpressions Cfg STyp Args CEArgs.
+    handleSubExpressions Cfg STyp Args CEArgs,
+    if-verbose-info (coq.say "INFO: call statement handled").
   handleStatement Cfg Fun I XNs {{ sApply lp:STyp lp:GId (@nil Expression) }} I XNs :-
     resolveId Cfg Fun GId STyp,
-    !.
+    !,
+    if-verbose-info (coq.say "INFO: call statement handled").
   % Debug handleStatement
   handleStatement _Cfg Trm Int _ _ _ _ :- coq.say "Fail with" Trm Int, fail.
 
   % TODO? Remove the o:int, if not needed to continue computation
   pred handleFun i:configuration, i:term, i:int, i:list name, o:term, o:int, o:list name.
   :if "trace_handleFun" handleFun _ X _ _ _ _ _ :- coq.say "handleFun:" { coq.term->string X }, fail.
-  handleFun Cfg (fun X _ F) I XNs S J YNs :- !, K is I + 1, handleFun Cfg (F (localid I)) K (X::XNs) S J YNs.
-  handleFun Cfg Body        I XNs S J YNs :- handleStatement Cfg Body I XNs S J YNs.
+  handleFun Cfg (fun X _ F) I XNs S J YNs :-
+    !,
+    K is I + 1,
+    handleFun Cfg (F (localid I)) K (X::XNs) S J YNs.
+  handleFun Cfg Body        I XNs S J YNs :-
+    handleStatement Cfg Body I XNs S J YNs,
+    if-verbose-info (coq.say "INFO: function handled").
 
   pred handleFixAndFun i:configuration, i:gref, i:term, i:int, i:list name, o:term, o:int, o:list name, o:term.
   :if "trace_handleFixAndFun" handleFixAndFun _ _ X _ _ _ _ _ _ :- coq.say "handleFixAndFun:" { coq.term->string X }, fail.
@@ -333,8 +350,11 @@ Elpi Accumulate lp:{{
       resolveConst C C3,
       resolveId Cfg C GId _,
       if (M = {{ true }})
-         (handleFixAndFun Cfg Name C3 1 [] C4 _ Ns FoNF, C2 = {{ @Some Statement lp:C4 }}, names->coqliststring Ns LNs)
-         (handleExpression Cfg T C3 C4, C2 = {{ @Some Expression lp:C4 }}, LNs = {{ @nil string }}, FoNF = {{ Nofix }}).
+         ( if-verbose-info (coq.say "INFO: Starting derivation of function" Name),
+           handleFixAndFun Cfg Name C3 1 [] C4 _ Ns FoNF, C2 = {{ @Some Statement lp:C4 }}, names->coqliststring Ns LNs )
+         ( if-verbose-info (coq.say "INFO: Starting derivation of expression" Name),
+           handleExpression Cfg T C3 C4, C2 = {{ @Some Expression lp:C4 }}, LNs = {{ @nil string }}, FoNF = {{ Nofix }} ),
+      if-verbose-info (coq.say "INFO:" Name "derived").
 
   pred reGlobal i:gref, o:term.
   reGlobal G (global G).
@@ -441,9 +461,12 @@ Elpi Accumulate lp:{{
 
   main (str Res :: Args) :-
     buildConfigAndFilterArgs Args Config Derivables,
+    if-verbose-info (coq.say "INFO: Config built"),
     std.map Derivables (deriveSymbol Config) IRSyms,
+    if-verbose-info (coq.say "INFO: Symbols derived"),
     list->coqlist {{ IRSymbol }} IRSyms CoqIRSyms,
     std.assert-ok! (coq.typecheck CoqIRSyms Typ) "Error typechecking IR symbols",
+    if-verbose-info (coq.say "INFO: Symbols typechecked"),
     coq.env.add-const Res CoqIRSyms Typ _ _.
 }}.
 Elpi Typecheck.
