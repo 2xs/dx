@@ -57,69 +57,71 @@ Elpi Accumulate lp:{{
   %% Currently limited to standard identifier characters
 
   pred chr->ascii i:string, o:term.
-  chr->ascii "_" {{ "_"%char }}.
-  chr->ascii "A" {{ "A"%char }}.
-  chr->ascii "B" {{ "B"%char }}.
-  chr->ascii "C" {{ "C"%char }}.
-  chr->ascii "D" {{ "D"%char }}.
-  chr->ascii "E" {{ "E"%char }}.
-  chr->ascii "F" {{ "F"%char }}.
-  chr->ascii "G" {{ "G"%char }}.
-  chr->ascii "H" {{ "H"%char }}.
-  chr->ascii "I" {{ "I"%char }}.
-  chr->ascii "J" {{ "J"%char }}.
-  chr->ascii "K" {{ "K"%char }}.
-  chr->ascii "L" {{ "L"%char }}.
-  chr->ascii "M" {{ "M"%char }}.
-  chr->ascii "N" {{ "N"%char }}.
-  chr->ascii "O" {{ "O"%char }}.
-  chr->ascii "P" {{ "P"%char }}.
-  chr->ascii "Q" {{ "Q"%char }}.
-  chr->ascii "R" {{ "R"%char }}.
-  chr->ascii "S" {{ "S"%char }}.
-  chr->ascii "T" {{ "T"%char }}.
-  chr->ascii "U" {{ "U"%char }}.
-  chr->ascii "V" {{ "V"%char }}.
-  chr->ascii "W" {{ "W"%char }}.
-  chr->ascii "X" {{ "X"%char }}.
-  chr->ascii "Y" {{ "Y"%char }}.
-  chr->ascii "Z" {{ "Z"%char }}.
-  chr->ascii "a" {{ "a"%char }}.
-  chr->ascii "b" {{ "b"%char }}.
-  chr->ascii "c" {{ "c"%char }}.
-  chr->ascii "d" {{ "d"%char }}.
-  chr->ascii "e" {{ "e"%char }}.
-  chr->ascii "f" {{ "f"%char }}.
-  chr->ascii "g" {{ "g"%char }}.
-  chr->ascii "h" {{ "h"%char }}.
-  chr->ascii "i" {{ "i"%char }}.
-  chr->ascii "j" {{ "j"%char }}.
-  chr->ascii "k" {{ "k"%char }}.
-  chr->ascii "l" {{ "l"%char }}.
-  chr->ascii "m" {{ "m"%char }}.
-  chr->ascii "n" {{ "n"%char }}.
-  chr->ascii "o" {{ "o"%char }}.
-  chr->ascii "p" {{ "p"%char }}.
-  chr->ascii "q" {{ "q"%char }}.
-  chr->ascii "r" {{ "r"%char }}.
-  chr->ascii "s" {{ "s"%char }}.
-  chr->ascii "t" {{ "t"%char }}.
-  chr->ascii "u" {{ "u"%char }}.
-  chr->ascii "v" {{ "v"%char }}.
-  chr->ascii "w" {{ "w"%char }}.
-  chr->ascii "x" {{ "x"%char }}.
-  chr->ascii "y" {{ "y"%char }}.
-  chr->ascii "z" {{ "z"%char }}.
-  chr->ascii "0" {{ "0"%char }}.
-  chr->ascii "1" {{ "1"%char }}.
-  chr->ascii "2" {{ "2"%char }}.
-  chr->ascii "3" {{ "3"%char }}.
-  chr->ascii "4" {{ "4"%char }}.
-  chr->ascii "5" {{ "5"%char }}.
-  chr->ascii "6" {{ "6"%char }}.
-  chr->ascii "7" {{ "7"%char }}.
-  chr->ascii "8" {{ "8"%char }}.
-  chr->ascii "9" {{ "9"%char }}.
+  chr->ascii "_" {{ "_"%char }} :- !.
+  chr->ascii "A" {{ "A"%char }} :- !.
+  chr->ascii "B" {{ "B"%char }} :- !.
+  chr->ascii "C" {{ "C"%char }} :- !.
+  chr->ascii "D" {{ "D"%char }} :- !.
+  chr->ascii "E" {{ "E"%char }} :- !.
+  chr->ascii "F" {{ "F"%char }} :- !.
+  chr->ascii "G" {{ "G"%char }} :- !.
+  chr->ascii "H" {{ "H"%char }} :- !.
+  chr->ascii "I" {{ "I"%char }} :- !.
+  chr->ascii "J" {{ "J"%char }} :- !.
+  chr->ascii "K" {{ "K"%char }} :- !.
+  chr->ascii "L" {{ "L"%char }} :- !.
+  chr->ascii "M" {{ "M"%char }} :- !.
+  chr->ascii "N" {{ "N"%char }} :- !.
+  chr->ascii "O" {{ "O"%char }} :- !.
+  chr->ascii "P" {{ "P"%char }} :- !.
+  chr->ascii "Q" {{ "Q"%char }} :- !.
+  chr->ascii "R" {{ "R"%char }} :- !.
+  chr->ascii "S" {{ "S"%char }} :- !.
+  chr->ascii "T" {{ "T"%char }} :- !.
+  chr->ascii "U" {{ "U"%char }} :- !.
+  chr->ascii "V" {{ "V"%char }} :- !.
+  chr->ascii "W" {{ "W"%char }} :- !.
+  chr->ascii "X" {{ "X"%char }} :- !.
+  chr->ascii "Y" {{ "Y"%char }} :- !.
+  chr->ascii "Z" {{ "Z"%char }} :- !.
+  chr->ascii "a" {{ "a"%char }} :- !.
+  chr->ascii "b" {{ "b"%char }} :- !.
+  chr->ascii "c" {{ "c"%char }} :- !.
+  chr->ascii "d" {{ "d"%char }} :- !.
+  chr->ascii "e" {{ "e"%char }} :- !.
+  chr->ascii "f" {{ "f"%char }} :- !.
+  chr->ascii "g" {{ "g"%char }} :- !.
+  chr->ascii "h" {{ "h"%char }} :- !.
+  chr->ascii "i" {{ "i"%char }} :- !.
+  chr->ascii "j" {{ "j"%char }} :- !.
+  chr->ascii "k" {{ "k"%char }} :- !.
+  chr->ascii "l" {{ "l"%char }} :- !.
+  chr->ascii "m" {{ "m"%char }} :- !.
+  chr->ascii "n" {{ "n"%char }} :- !.
+  chr->ascii "o" {{ "o"%char }} :- !.
+  chr->ascii "p" {{ "p"%char }} :- !.
+  chr->ascii "q" {{ "q"%char }} :- !.
+  chr->ascii "r" {{ "r"%char }} :- !.
+  chr->ascii "s" {{ "s"%char }} :- !.
+  chr->ascii "t" {{ "t"%char }} :- !.
+  chr->ascii "u" {{ "u"%char }} :- !.
+  chr->ascii "v" {{ "v"%char }} :- !.
+  chr->ascii "w" {{ "w"%char }} :- !.
+  chr->ascii "x" {{ "x"%char }} :- !.
+  chr->ascii "y" {{ "y"%char }} :- !.
+  chr->ascii "z" {{ "z"%char }} :- !.
+  chr->ascii "0" {{ "0"%char }} :- !.
+  chr->ascii "1" {{ "1"%char }} :- !.
+  chr->ascii "2" {{ "2"%char }} :- !.
+  chr->ascii "3" {{ "3"%char }} :- !.
+  chr->ascii "4" {{ "4"%char }} :- !.
+  chr->ascii "5" {{ "5"%char }} :- !.
+  chr->ascii "6" {{ "6"%char }} :- !.
+  chr->ascii "7" {{ "7"%char }} :- !.
+  chr->ascii "8" {{ "8"%char }} :- !.
+  chr->ascii "9" {{ "9"%char }} :- !.
+  chr->ascii C X :-
+    coq.warn "Cannot use character" C "in names", fail.
 
   pred string->listchr i:string, o:list string.
   string->listchr "" [] :- !.
