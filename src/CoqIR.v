@@ -214,7 +214,10 @@ Elpi Accumulate lp:{{
   pred resolveId i:configuration, i:term, o:term, o:term.
   resolveId (cfg _ _ _ _ PGs _) (global Id) GId STyp :-
     coq.gref.map.find Id PGs (pgGlobal IId STyp),
+    !,
     int->pos IId GId.
+  resolveId _ (global Id) _ _ :-
+    coq.error "Unknown identifier" Id.
 
   pred matchArgType i:term, o:gref.
   matchArgType (match _ (fun _ (global T) _) _) T.
