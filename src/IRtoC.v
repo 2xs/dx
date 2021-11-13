@@ -230,7 +230,9 @@ Fixpoint zipWithCount {A: Type} (count: Id) (xs: list A) : list (Id * A) :=
   | (x :: xs') => (count, x) :: zipWithCount (Pos.succ count) xs'
   end.
 
-Definition makeDXModule (syms: list IRSymbol) (computeMain: list Id -> GlobalId) : Result dxModule :=
+Definition makeDXModule (comps: list Ctypes.composite_definition)
+                        (syms: list IRSymbol)
+                        (computeMain: list Id -> GlobalId) : Result dxModule :=
   do cSyms <- convertSymbols syms ;
   let globs := map (fun s => (irSymbolId s, irSymbolName s)) syms in
   let initLocs := Pos.of_succ_nat (length syms) in
@@ -238,12 +240,12 @@ Definition makeDXModule (syms: list IRSymbol) (computeMain: list Id -> GlobalId)
   let pubs := map irSymbolId syms in
   let names := app globs locs in
   let ids := map fst names in
-  do prog <- fromCompCertRes (Ctypes.make_program nil cSyms pubs (computeMain ids)) ;
+  do prog <- fromCompCertRes (Ctypes.make_program comps cSyms pubs (computeMain ids)) ;
   Ok (MkDXModule prog names).
 
 Definition makeDXModuleWithMain (syms: list IRSymbol) (main: GlobalId) : Result dxModule :=
-  makeDXModule syms (fun _ => main).
+  makeDXModule nil syms (fun _ => main).
 
 Definition makeDXModuleWithoutMain (syms: list IRSymbol) : Result dxModule :=
   let max_all xs := Pos.succ (List.fold_left Pos.max xs 1%positive) in
-  makeDXModule syms max_all.
+  makeDXModule nil syms max_all.
