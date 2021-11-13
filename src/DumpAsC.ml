@@ -27,14 +27,18 @@ open DXModule
 
 let register_string (a,s) =
     let s = camlstring_of_coqstring s in
-    assert (not (Hashtbl.mem string_of_atom a)) ;
-    let s = if Hashtbl.mem atom_of_string s
-            then s ^ "$" ^ Z.to_string (Z.Zpos a)
-            else s in
-    assert (not (Hashtbl.mem atom_of_string s)) ;
-    Hashtbl.add atom_of_string s a ;
-    Hashtbl.add string_of_atom a s ;
-    if P.ge a !next_atom then next_atom := P.succ a
+    match Hashtbl.find_opt string_of_atom a with
+    | None -> let s = if Hashtbl.mem atom_of_string s
+                      then s ^ "$" ^ Z.to_string (Z.Zpos a)
+                      else s in
+              assert (not (Hashtbl.mem atom_of_string s)) ;
+              Hashtbl.add atom_of_string s a ;
+              Hashtbl.add string_of_atom a s ;
+              if P.ge a !next_atom then next_atom := P.succ a
+    | Some s' ->
+        (* allow to register the same string-atom correspondance
+           multiple times *)
+        assert (s == s')
 
 (* print_dx : list (string * Result dxModule) -> unit *)
 let print_dx_modules mods =
