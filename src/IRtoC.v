@@ -269,13 +269,6 @@ Definition makeDXModule (comps: list Ctypes.composite_definition)
   do prog <- fromCompCertRes (Ctypes.make_program comps cSyms pubs (computeMain ids)) ;
   Ok (MkDXModule prog names).
 
-Definition makeDXModuleWithMain (syms: list IRSymbol) (main: GlobalId) : Result dxModule :=
-  makeDXModule nil nil syms (fun _ => main).
-
-Definition makeDXModuleWithoutMain (syms: list IRSymbol) : Result dxModule :=
-  let max_all xs := Pos.succ (List.fold_left Pos.max xs 1%positive) in
-  makeDXModule nil nil syms max_all.
-
 Import String.
 Open Scope string_scope.
 
