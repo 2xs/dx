@@ -111,4 +111,4 @@ GenerateIntermediateRepresentation SymbolIRs
   externGetReady
   prepare.
 
-Definition dxModuleTest := makeDXModuleWithoutMain SymbolIRs.
+Definition dxModuleTest := makeDXModuleWithDefaults SymbolIRs.
