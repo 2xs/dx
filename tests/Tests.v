@@ -24,6 +24,8 @@ From compcert.common Require Errors.
 From dx Require Import ResultMonad IR CoqIR IRtoC DXModule DumpAsC.
 From dx.Type Require Bool Nat.
 
+Import UserIdentNotations.
+
 Open Scope string.
 
 Definition state := nat.
@@ -93,6 +95,35 @@ Definition derivableNeg := MkDerivableSymbol M "neg" true boolToBoolType neg fal
 
 Axiom axiom : nat.
 
+Record info := MkInfo
+  { infoA: bool
+  ; infoB: bool
+  }.
+
+Definition infoComposite :=
+  Ctypes.Composite
+    $"info_s"
+    Ctypes.Struct
+    [ ($"info_a", Ctypes.type_bool); ($"info_b", Ctypes.type_bool) ]
+    Ctypes.noattr.
+
+Definition infoCType := Ctypes.Tstruct $"info_s" Ctypes.noattr.
+
+Definition infoCompilableType := MkCompilableType info infoCType.
+Definition infoToBoolSymbolType :=
+  MkCompilableSymbolType [infoCompilableType] (Some Bool.boolCompilableType).
+
+Definition infoProjA :=
+  MkPrimitive infoToBoolSymbolType
+              infoA
+              (fun es => match es with
+                         | [s] => Ok (Csyntax.Efield s $"info_a" Ctypes.type_bool)
+                         | _   => Err PrimitiveEncodingFailed
+                         end).
+
+Definition getInfoA (i: info) : M bool :=
+  returnM (infoA i).
+
 Close Scope monad_scope.
 
 (***************************************)
@@ -103,12 +134,15 @@ GenerateIntermediateRepresentation SymbolIRs
   Nat.Exports
   derivableId
   axiom
+  infoCompilableType
+  infoProjA
   __
   neg
   ModTest
   externEmptyUnitM
   externReady
   externGetReady
-  prepare.
+  prepare
+  getInfoA.
 
-Definition dxModuleTest := makeDXModuleWithDefaults SymbolIRs.
+Definition dxModuleTest := makeDXModuleWithUserIds [infoComposite] ["info_s";"info_a";"info_b"] SymbolIRs.
