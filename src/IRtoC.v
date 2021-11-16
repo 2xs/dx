@@ -258,7 +258,7 @@ End UserIdentNotations.
 Definition makeDXModule (comps: list Ctypes.composite_definition)
                         (userIdents: list (AST.ident * String.string))
                         (syms: list IRSymbol)
-                        (computeMain: list Id -> GlobalId) : Result dxModule :=
+                        (main: AST.ident) : Result dxModule :=
   do cSyms <- convertSymbols syms ;
   let globs := map (fun s => (toCompCertId (irSymbolId s), irSymbolName s)) syms in
   let initLocs := Pos.of_succ_nat (length syms) in
@@ -266,7 +266,7 @@ Definition makeDXModule (comps: list Ctypes.composite_definition)
   let pubs := map irSymbolId syms in
   let names := globs ++ locs ++ userIdents in
   let ids := map fst names in
-  do prog <- fromCompCertRes (Ctypes.make_program comps cSyms pubs (computeMain ids)) ;
+  do prog <- fromCompCertRes (Ctypes.make_program comps cSyms pubs main) ;
   Ok (MkDXModule prog names).
 
 Import String.
@@ -278,8 +278,8 @@ Definition makeDXModuleWithUserIds (comps: list Ctypes.composite_definition)
   let main := ident_of_string "main" in
   let userIdents := map (fun x => (ident_of_string x, x)) userIdents in
   let userIdents := (main, "main") :: userIdents in
-  makeDXModule comps userIdents syms (fun _ => main).
+  makeDXModule comps userIdents syms main.
 
 Definition makeDXModuleWithDefaults (syms: list IRSymbol) : Result dxModule :=
   let main := ident_of_string "main" in
-  makeDXModule nil ((main, "main") :: nil) syms (fun _ => main).
+  makeDXModule nil ((main, "main") :: nil) syms main.
