@@ -17,8 +17,9 @@
 From Coq Require Import List ZArith.
 From Coq Require String.
 
-From compcert.cfrontend Require Csyntax Ctypes.
 From compcert.common Require AST.
+From compcert.cfrontend Require Csyntax Ctypes.
+From compcert.exportclight Require Clightdefs.
 
 From dx Require Import ResultMonad ResultOps IR DXModule.
 
@@ -236,7 +237,26 @@ Fixpoint pairWithIdent {A: Type} (count: Id) (xs: list A) : list (AST.ident * A)
   | (x :: xs') => (toCompCertId count, x) :: pairWithIdent (Pos.succ count) xs'
   end.
 
+(* Piggyback on CompCert encoder from string to identifiers for user-defined
+   identifiers, while making sure those identifiers are always distinct from
+   the ones that dx generates automatically *)
+Definition ident_of_string (s: String.string) : AST.ident :=
+  xI (Clightdefs.ident_of_string s).
+
+Module UserIdentNotations.
+
+Declare Scope user_ident_scope.
+
+Notation "$ s" := (ltac:(let x := eval compute in (ident_of_string s)
+                         in  exact x))
+                  (at level 1, only parsing) : user_ident_scope.
+
+Open Scope user_ident_scope.
+
+End UserIdentNotations.
+
 Definition makeDXModule (comps: list Ctypes.composite_definition)
+                        (userIdents: list (AST.ident * String.string))
                         (syms: list IRSymbol)
                         (computeMain: list Id -> GlobalId) : Result dxModule :=
   do cSyms <- convertSymbols syms ;
@@ -244,14 +264,21 @@ Definition makeDXModule (comps: list Ctypes.composite_definition)
   let initLocs := Pos.of_succ_nat (length syms) in
   let locs := pairWithIdent initLocs (flat_map irSymbolLocals syms) in
   let pubs := map irSymbolId syms in
-  let names := app globs locs in
+  let names := globs ++ locs ++ userIdents in
   let ids := map fst names in
   do prog <- fromCompCertRes (Ctypes.make_program comps cSyms pubs (computeMain ids)) ;
   Ok (MkDXModule prog names).
 
 Definition makeDXModuleWithMain (syms: list IRSymbol) (main: GlobalId) : Result dxModule :=
-  makeDXModule nil syms (fun _ => main).
+  makeDXModule nil nil syms (fun _ => main).
 
 Definition makeDXModuleWithoutMain (syms: list IRSymbol) : Result dxModule :=
   let max_all xs := Pos.succ (List.fold_left Pos.max xs 1%positive) in
-  makeDXModule nil syms max_all.
+  makeDXModule nil nil syms max_all.
+
+Import String.
+Open Scope string_scope.
+
+Definition makeDXModuleWithDefaults (syms: list IRSymbol) : Result dxModule :=
+  let main := ident_of_string "main" in
+  makeDXModule nil ((main, "main") :: nil) syms (fun _ => main).
