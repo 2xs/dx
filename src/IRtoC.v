@@ -279,6 +279,14 @@ Definition makeDXModuleWithoutMain (syms: list IRSymbol) : Result dxModule :=
 Import String.
 Open Scope string_scope.
 
+Definition makeDXModuleWithUserIds (comps: list Ctypes.composite_definition)
+                                   (userIdents: list String.string)
+                                   (syms: list IRSymbol) : Result dxModule :=
+  let main := ident_of_string "main" in
+  let userIdents := map (fun x => (ident_of_string x, x)) userIdents in
+  let userIdents := (main, "main") :: userIdents in
+  makeDXModule comps userIdents syms (fun _ => main).
+
 Definition makeDXModuleWithDefaults (syms: list IRSymbol) : Result dxModule :=
   let main := ident_of_string "main" in
   makeDXModule nil ((main, "main") :: nil) syms (fun _ => main).
