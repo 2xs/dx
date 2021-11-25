@@ -130,7 +130,7 @@ else
 endif
 
 cprinter-link-args: compcertcprinter-cmx-args
-	printf 'str.cmxa\nunix.cmxa\n' >> $@
+	printf 'str.cmxa\nunix.cmxa\n' > $@
 ifeq ($(INSTALLCOMPCERTCPRINTER),true)
 	printf 'compcertcprinter.cmxa\n' >> $@
 else
