@@ -210,7 +210,7 @@ Definition convertSymbol (offsetLocals: LocalId) (sym: IRSymbol) : Result (Globa
   | MkIRSymbol _ _ _ false _ (Some _) _ =>
       Err InitialisedGlobalConstantCannotBeConverted
   | MkIRSymbol _ _ _ false _ None _ =>
-      Ok (id, AST.Gvar (AST.mkglobvar (returnCType ty) nil true false))
+      Ok (id, AST.Gvar (AST.mkglobvar (returnCType ty) nil false false))
   end.
 
 Fixpoint internConvertSymbols (offsetLocals: LocalId) (syms: list IRSymbol) : Result (list (GlobalId * CSymbol)) :=
