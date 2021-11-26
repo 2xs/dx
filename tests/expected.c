@@ -6,7 +6,7 @@ struct info_s {
 
 extern _Bool id(_Bool);
 
-extern unsigned int const axiom;
+extern unsigned int axiom;
 
 extern _Bool neg(_Bool);
 
@@ -21,7 +21,7 @@ _Bool id(_Bool b)
   return b;
 }
 
-extern unsigned int const axiom;
+extern unsigned int axiom;
 
 _Bool neg(_Bool b$22)
 {
