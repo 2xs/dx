@@ -233,8 +233,9 @@ Elpi Accumulate lp:{{
     handleSubExpressions Cfg STyp Args CArgs.
   handleExpression (cfg _ _ _ _ PGs _) _ (global (const _ as C)) {{ eGlobal lp:CTyp lp:Id (@nil Expression) }} :-
     !,
-    coq.gref.map.find C PGs (pgGlobal IId CTyp), % TODO? show debugging message when find fails
-    int->pos IId Id.
+    if (coq.gref.map.find C PGs (pgGlobal IId CTyp))
+      (int->pos IId Id)
+      (coq.error "Unknown identifier" C).
   % Very strict case for let: it covers only coercions
   handleExpression Cfg _ (let _ Typ Exp x\x) Exp2 :-
     !,
