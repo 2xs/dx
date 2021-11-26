@@ -121,7 +121,7 @@ Elpi Accumulate lp:{{
   chr->ascii "8" {{ "8"%char }} :- !.
   chr->ascii "9" {{ "9"%char }} :- !.
   chr->ascii C _ :-
-    coq.error "Cannot use character" C "in names", fail.
+    coq.error "Cannot use character" C "in names".
 
   pred string->listchr i:string, o:list string.
   string->listchr "" [] :- !.
