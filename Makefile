@@ -67,6 +67,8 @@ test: tests/generated.c
 
 -include .depend.coq
 
+tests/TestMain.cmi: src/DumpAsC.cmx
+
 ifneq (,$(findstring grouped-target,$(.FEATURES)))
 
 extr/Extr.vo $(EXTRACTEDOCAMLFILES) &: extr/Extr.v $(EXTRACTEDMODULESSRC)
