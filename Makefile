@@ -159,6 +159,7 @@ endif
 tests/generated.c: tests/main tests/compcert.ini
 	cd tests && ./main
 	diff -u tests/expected.c $@
+	diff -u tests/expected.h tests/generated.h
 
 tests/compcert.ini:
 	ln -sf $(COMPCERTSRCDIR)/compcert.ini $@

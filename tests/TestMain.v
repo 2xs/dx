@@ -22,5 +22,7 @@ From dx Require Import DumpAsC.
 From dx.tests Require Import Tests.
 
 Definition main := ltac:(let ms := eval vm_compute in
-  [ ("generated.c", dxModuleTest) ]
+  [ ("generated.h", dxModuleTestH)
+  ; ("generated.c", dxModuleTest)
+  ]
   in exact (print_dx_modules ms)).

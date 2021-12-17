@@ -128,6 +128,25 @@ Close Scope monad_scope.
 
 (***************************************)
 
+(* Elpi Debug "trace_deriveSymbol". *)
+GenerateIntermediateRepresentation HeaderSymbolIRs
+  M bindM returnM
+  Bool.Exports
+  Nat.Exports
+  derivableId
+  axiom
+  infoCompilableType
+  infoProjA
+  neg
+  ModTest
+  externEmptyUnitM
+  externReady
+  externGetReady
+  prepare
+  getInfoA.
+
+Definition dxModuleTestH := makeDXModuleWithUserIds [infoComposite] ["info_s";"info_a";"info_b"] HeaderSymbolIRs.
+
 GenerateIntermediateRepresentation SymbolIRs
   M bindM returnM
   Bool.Exports
