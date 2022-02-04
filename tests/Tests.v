@@ -104,7 +104,8 @@ Definition infoComposite :=
   Ctypes.Composite
     $"info_s"
     Ctypes.Struct
-    [ ($"info_a", Ctypes.type_bool); ($"info_b", Ctypes.type_bool) ]
+    [ Ctypes.Member_plain $"info_a" Ctypes.type_bool;
+      Ctypes.Member_plain $"info_b" Ctypes.type_bool ]
     Ctypes.noattr.
 
 Definition infoCType := Ctypes.Tstruct $"info_s" Ctypes.noattr.

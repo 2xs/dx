@@ -19,7 +19,7 @@ From Coq Require String.
 
 From compcert.common Require AST.
 From compcert.cfrontend Require Csyntax Ctypes.
-From compcert.exportclight Require Clightdefs.
+From compcert.export Require Ctypesdefs.
 
 From dx Require Import ResultMonad ResultOps IR DXModule.
 
@@ -241,7 +241,7 @@ Fixpoint pairWithIdent {A: Type} (count: Id) (xs: list A) : list (AST.ident * A)
    identifiers, while making sure those identifiers are always distinct from
    the ones that dx generates automatically *)
 Definition ident_of_string (s: String.string) : AST.ident :=
-  xI (Clightdefs.ident_of_string s).
+  xI (Ctypesdefs.ident_of_string s).
 
 Module UserIdentNotations.
 
