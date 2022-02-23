@@ -113,6 +113,18 @@ coq-elpi     1.11.0      Elpi extension language for Coq
 ocaml        4.11.1      The OCaml compiler (virtual package)
 ```
 
+CompCert and Coq-Elpi must be installed where Coq can find them. That
+is to say that `coqc` should accept a file containing:
+
+```coq
+From compcert Require Import Archi.
+Print ptr64.
+```
+
+(and display whether you are running a 32-bit or 64-bit version of
+CompCert). You can use `$COQPATH` environment variable to configure
+where Coq should look for libraries.
+
 Note that if you want to be able to generate C source code, you will
 need not only an _installation_ of CompCert but also its _compiled
 source code_, since it will use CompCert’s module to pretty-print a C
@@ -139,6 +151,13 @@ opam install coq coq-elpi
 opam install --deps-only coq-compcert
 opam install -b coq-compcert
 ```
+
+Note that if you install the `coq-compcert-32` opam package, it will
+_not_ be installed in a directory where Coq will find it automatically
+(since it would otherwise conflict with the `coq-compcert` package).
+See the documentation of the `coq-compcert-32` on how to use it or add
+to your `$COQPATH` the directory where the library is installed
+(something like `.../lib/coq-variant/compcert32`).
 
 ### Building dx
 
