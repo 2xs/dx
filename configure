@@ -38,7 +38,9 @@ Available options:
                               if you installed CompCert with
                                   "opam install -b coq-compcert"
                               it will default to the directory in which opam
-                              built it
+                              built it;
+                              note that, even when this option is set, CompCert
+                              must be also installed where Coq will find it
 
   --install-compcert-printer  ask to install the required built modules from
                               CompCert in some subdirectory; by using this, the

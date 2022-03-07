@@ -126,9 +126,10 @@ CompCert). You can use `$COQPATH` environment variable to configure
 where Coq should look for libraries.
 
 Note that if you want to be able to generate C source code, you will
-need not only an _installation_ of CompCert but also its _compiled
-source code_, since it will use CompCert’s module to pretty-print a C
-AST.
+need both an _installation_ of CompCert but also its _compiled source
+code_, since it will use CompCert’s module to pretty-print a C AST.
+Obviously, the installed CompCert and the source code should be the
+same version.
 
 You can use [opam] to install these dependencies: it provides the `-b`
 option to keep the build directory. If you do not mind using disk
