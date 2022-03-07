@@ -95,7 +95,7 @@ To install dx, you will require:
     (required to use parallelism reliably),
 -   Coq
 -   [coq-elpi]
--   CompCert (version 3.9)
+-   CompCert (version 3.10)
 -   OCaml compiler; currently the `Makefile` assumes you use the
     native compiler, no recipe is written for bytecode compilation.
 
@@ -107,10 +107,10 @@ dependencies:
 ```
 $ opam list ocaml coq coq-elpi coq-compcert
 # Name       # Installed # Synopsis
-coq          8.13.2      Formal proof management system
-coq-compcert 3.9         The CompCert C compiler (64 bit)
-coq-elpi     1.11.0      Elpi extension language for Coq
-ocaml        4.11.1      The OCaml compiler (virtual package)
+coq          8.15.0      Formal proof management system
+coq-compcert 3.10        The CompCert C compiler (64 bit)
+coq-elpi     1.13.0      Elpi extension language for Coq
+ocaml        4.12.1      The OCaml compiler (virtual package)
 ```
 
 CompCert and Coq-Elpi must be installed where Coq can find them. That
