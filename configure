@@ -89,6 +89,20 @@ if [ -z "$compcertdir" ] && which opam > /dev/null ; then
     fi
 fi
 
+# Check consistency
+if [ -n "$compcertdir" -a ! -x "$compcertdir/tools/modorder" ] ; then
+    echo "Cannot find CompCert compiled sources in $compcertdir"
+    compcertdir=""
+fi
+if [ -z "$compcertdir" -a -n "$cprinterdir" ] ; then
+    echo "Cannot find CompCert compiled sources: disabling C Printer"
+    cprinterdir=""
+fi
+if [ -z "$cprinterdir" -a "$installcompcertprinter" = true ] ; then
+    echo "C printer will not be built, disabling its installation"
+    installcompcertprinter=""
+fi
+
 cat > Makefile.config << EOF
 COQDEVDIR := $coqdevdir
 CPRINTERDIR := $cprinterdir
