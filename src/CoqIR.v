@@ -28,7 +28,7 @@ Elpi Accumulate lp:{{
 
   % Verbose info
   pred if-verbose-info i:prop.
-  :if "VERBOSE_INFO" if-verbose-info P :- !, P.
+  if-verbose-info P :- (get-option "verbose" tt; get-option "elpi.verbose" tt), !, P.
   if-verbose-info _.
 
   pred coqlist->list i:term, o:list term.
@@ -466,14 +466,18 @@ Elpi Accumulate lp:{{
     buildTermTypeMaps PreCfg 1 {coq.gref.map.empty} {coq.gref.map.empty} PGCMs _ PGs CMs Derivables.
 
   main (str Res :: Args) :-
-    buildConfigAndFilterArgs Args Config Derivables,
-    if-verbose-info (coq.say "INFO: Config built"),
-    std.map Derivables (deriveSymbol Config) IRSyms,
-    if-verbose-info (coq.say "INFO: Symbols derived"),
-    list->coqlist {{ IRSymbol }} IRSyms CoqIRSyms,
-    std.assert-ok! (coq.typecheck CoqIRSyms Typ) "Error typechecking IR symbols",
-    if-verbose-info (coq.say "INFO: Symbols typechecked"),
-    coq.env.add-const Res CoqIRSyms Typ _ _.
+    attributes Attrs,
+    coq.parse-attributes Attrs [ att "verbose" bool,
+                                 att "elpi.verbose" bool ] Opts,
+    !,
+    Opts => (buildConfigAndFilterArgs Args Config Derivables,
+             if-verbose-info (coq.say "INFO: Config built"),
+             std.map Derivables (deriveSymbol Config) IRSyms,
+             if-verbose-info (coq.say "INFO: Symbols derived"),
+             list->coqlist {{ IRSymbol }} IRSyms CoqIRSyms,
+             std.assert-ok! (coq.typecheck CoqIRSyms Typ) "Error typechecking IR symbols",
+             if-verbose-info (coq.say "INFO: Symbols typechecked"),
+             coq.env.add-const Res CoqIRSyms Typ _ _).
 }}.
 Elpi Typecheck.
 Elpi Export GenerateIntermediateRepresentation.

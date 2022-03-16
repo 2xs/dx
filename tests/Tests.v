@@ -129,7 +129,12 @@ Close Scope monad_scope.
 
 (***************************************)
 
-(* Elpi Debug "trace_deriveSymbol". *)
+(* Activate the verbose attribute to trace GenerateIntermediateRepresentation *)
+(* It can also be activated globally by setting the environment variable
+     COQ_ELPI_ATTRIBUTES=verbose
+ *)
+
+(* #[verbose] *)
 GenerateIntermediateRepresentation HeaderSymbolIRs
   M bindM returnM
   Bool.Exports
@@ -148,6 +153,7 @@ GenerateIntermediateRepresentation HeaderSymbolIRs
 
 Definition dxModuleTestH := makeDXModuleWithUserIds [infoComposite] ["info_s";"info_a";"info_b"] HeaderSymbolIRs.
 
+(* #[verbose] *)
 GenerateIntermediateRepresentation SymbolIRs
   M bindM returnM
   Bool.Exports
