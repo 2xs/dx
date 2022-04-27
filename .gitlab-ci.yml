@@ -1,0 +1,35 @@
+image: "coqorg/coq:latest"
+build dx and deps:
+  stage: build
+  script:
+    # Dependencies
+    - eval $(opam env --switch=4.07.1+flambda --set-switch)
+    - opam update
+    - opam install --deps-only -b -y .
+
+    # Build
+    - ./configure --cprinterdir=$(opam var lib)/dx --compcertdir=$(opam var coq-compcert:build) --install-compcert-printer
+    - make
+    - make install
+
+    # Artifacts
+    - ARTIFACTS=$PWD/dx-and-deps
+    - mkdir -p $ARTIFACTS
+    - cd $(opam var lib)
+    - rsync -rptR coq/user-contrib/Flocq coq/user-contrib/compcert coq/user-contrib/elpi coq/user-contrib/dx dx --exclude=*.v --exclude=coq/user-contrib/elpi/apps/* $ARTIFACTS
+  artifacts:
+    paths:
+      - dx-and-deps
+    # The artifacts are large, expire them soon if the user does not
+    # ask explicitly to keep them
+    expire_in: 1 hour
+
+test:
+  stage: test
+  dependencies:
+    - build dx and deps
+  script:
+    - eval $(opam env --switch=4.07.1+flambda --set-switch)
+    - LIB=$(opam var lib)
+    - rsync -rpt dx-and-deps/* $LIB
+    - make -C tests CPRINTERDIR=$LIB/dx
