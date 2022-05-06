@@ -32,6 +32,7 @@ Inductive Error : Type :=
 | CompCert : Errors.errmsg -> Error
 .
 
+#[universes(template)]
 Inductive Result (A: Type) : Type :=
 | Ok: A -> Result A
 | Err: Error -> Result A
