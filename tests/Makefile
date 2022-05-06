@@ -46,9 +46,8 @@ OCAMLINCS := -args $(CPRINTERDIR)/cprinter-inc-args
 
 ifndef COMPCERTINI
 $(info $$(COMPCERTINI) is not set: defaulting to $$(CPRINTERDIR)/compcertcprinter/compcert.ini)
-endif
-
 COMPCERTINI := $(CPRINTERDIR)/compcertcprinter/compcert.ini
+endif
 
 all: generated.c
 
