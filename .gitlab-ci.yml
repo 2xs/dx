@@ -1,4 +1,4 @@
-image: "coqorg/coq:latest"
+image: "coqorg/coq:8.13"
 build dx and deps:
   stage: build
   script:
