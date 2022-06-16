@@ -227,8 +227,9 @@ Elpi Accumulate lp:{{
   handleExpression (cfg _ _ _ _ PGs _) _ (global Prim) {{ ePrim lp:CPrim (@nil Expression) }} :-
     coq.gref.map.find Prim PGs (pgPrimitive CPrim), !.
   handleExpression (cfg _ _ _ _ PGs _ as Cfg) _ (app (global Prim :: Args)) {{ ePrim lp:CPrim lp:CArgs }} :-
-    coq.gref.map.find Prim PGs (pgPrimitive CPrim),
-    CPrim = app [{{MkPrimitive}}, STyp, _, _],
+    if (coq.gref.map.find Prim PGs (pgPrimitive CPrim))
+       (CPrim = app [{{MkPrimitive}}, STyp, _, _])
+       (coq.error "Cannot find a primitive named" {coq.term->string (global Prim)}),
     !,
     handleSubExpressions Cfg STyp Args CArgs.
   handleExpression (cfg _ _ _ _ PGs _) _ (global (const _ as C)) {{ eGlobal lp:CTyp lp:Id (@nil Expression) }} :-
@@ -244,7 +245,7 @@ Elpi Accumulate lp:{{
     !,
     resolveCompilableType Cfg Typ CTyp,
     int->pos I J.
-  handleExpression _ Typ Trm _ :- coq.say "Fail with expression" Typ Trm, fail.
+  handleExpression _ _ Trm _ :- coq.error "Cannot convert expression" Trm.
 
   pred handleSubExpressions i:configuration, i:term, i:list term, o:term.
   :if "trace_handleSubExpressions" handleSubExpressions _ _ X _ :- coq.say "handleSubExpressions:" { std.map coq.term->string X }, fail.
