@@ -17,6 +17,8 @@
 Require Import List.
 Import ListNotations.
 
+From Coq Require Bool.Bool.
+
 From compcert.cfrontend Require Csyntax Ctypes Cop.
 From compcert.common Require Values.
 
@@ -59,6 +61,14 @@ Definition boolNeg :=
                          | _   => Err PrimitiveEncodingFailed
                          end).
 
+Definition boolEq :=
+  MkPrimitive boolToBoolToBoolSymbolType
+              Bool.Bool.eqb
+              (fun es => match es with
+                         | [e1;e2] => Ok (Csyntax.Ebinop Cop.Oeq e1 e2 Ctypes.type_bool)
+                         | _       => Err PrimitiveEncodingFailed
+                         end).
+
 Definition boolOr :=
   MkPrimitive boolToBoolToBoolSymbolType
               orb
@@ -81,6 +91,7 @@ Module Exports.
   Definition boolMatchableType := boolMatchableType.
   Definition boolFalse := boolFalse.
   Definition boolTrue := boolTrue.
+  Definition boolEq := boolEq.
   Definition boolNeg := boolNeg.
   Definition boolOr := boolOr.
   Definition boolAnd := boolAnd.
