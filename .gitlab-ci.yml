@@ -7,6 +7,8 @@ build dx and deps:
     - opam update
     - opam install --deps-only -b -y .
 
+    - opam list
+
     # Build
     - ./configure --cprinterdir=$(opam var lib)/dx --compcertdir=$(opam var coq-compcert:build) --install-compcert-printer
     - make
