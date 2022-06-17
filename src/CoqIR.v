@@ -301,7 +301,8 @@ Elpi Accumulate lp:{{
     !,
     int->pos I LI,
     K is I + 1,
-    resolveCompilableType Cfg Typ CTyp,
+    ( resolveCompilableType Cfg Typ CTyp ;
+      coq.error "Cannot translate type" { coq.term->string Typ } "for variable" Z ),
     handleStatement Cfg X K (Z::XNs) Y L YNs,
     handleStatement Cfg (B (localid I)) L YNs C J ZNs,
     if-verbose-info (coq.say "INFO: bind statement handled").
