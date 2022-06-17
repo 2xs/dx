@@ -357,11 +357,11 @@ Elpi Accumulate lp:{{
       resolveConst C C3,
       resolveId Cfg C GId _,
       if (M = {{ true }})
-         ( if-verbose-info (coq.say "INFO: Starting derivation of function" Name),
+         ( if-verbose-info (coq.say "INFO: Starting derivation of function" { coq.term->string C }),
            handleFixAndFun Cfg Name C3 1 [] C4 _ Ns FoNF, C2 = {{ @Some Statement lp:C4 }}, names->coqliststring Ns LNs )
-         ( if-verbose-info (coq.say "INFO: Starting derivation of expression" Name),
+         ( if-verbose-info (coq.say "INFO: Starting derivation of expression" { coq.term->string C }),
            handleExpression Cfg T C3 C4, C2 = {{ @Some Expression lp:C4 }}, LNs = {{ @nil string }}, FoNF = {{ Nofix }} ),
-      if-verbose-info (coq.say "INFO:" Name "derived").
+      if-verbose-info (coq.say "INFO:" { coq.term->string C } "derived").
 
   pred reGlobal i:gref, o:term.
   reGlobal G (global G).
