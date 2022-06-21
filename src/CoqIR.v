@@ -167,9 +167,10 @@ Elpi Accumulate lp:{{
   type argumentSeparator term.
 
   pred resolveArg i:argument, o:term.
-  resolveArg (trm T) T.
+  resolveArg (trm T) T :- !.
   resolveArg (str "__") argumentSeparator :- !.
-  resolveArg (str Name) T :- coq.locate-all Name (Loc :: _), resolveLoc Loc T.
+  resolveArg (str Name) T :- coq.locate-all Name (Loc :: _), resolveLoc Loc T, !.
+  resolveArg (str Name) _ :- coq.error "Cannot locate name" Name.
 
   % Split the argument list at "__"
   pred splitArgs i:list argument, o:list argument, o:list argument.
