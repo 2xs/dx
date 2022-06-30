@@ -3,9 +3,11 @@ build dx and deps:
   stage: build
   script:
     # Dependencies
-    - eval $(opam env --switch=4.07.1+flambda --set-switch)
+    - opam config list
     - opam update
     - opam install --deps-only -b -y .
+
+    - opam list
 
     # Build
     - ./configure --cprinterdir=$(opam var lib)/dx --compcertdir=$(opam var coq-compcert:build) --install-compcert-printer
@@ -29,7 +31,7 @@ test:
   dependencies:
     - build dx and deps
   script:
-    - eval $(opam env --switch=4.07.1+flambda --set-switch)
+    - opam config list
     - LIB=$(opam var lib)
     - rsync -rpt dx-and-deps/* $LIB
     - make -C tests CPRINTERDIR=$LIB/dx

@@ -167,9 +167,10 @@ Elpi Accumulate lp:{{
   type argumentSeparator term.
 
   pred resolveArg i:argument, o:term.
-  resolveArg (trm T) T.
+  resolveArg (trm T) T :- !.
   resolveArg (str "__") argumentSeparator :- !.
-  resolveArg (str Name) T :- coq.locate-all Name (Loc :: _), resolveLoc Loc T.
+  resolveArg (str Name) T :- coq.locate-all Name (Loc :: _), resolveLoc Loc T, !.
+  resolveArg (str Name) _ :- coq.error "Cannot locate name" Name.
 
   % Split the argument list at "__"
   pred splitArgs i:list argument, o:list argument, o:list argument.
@@ -227,8 +228,9 @@ Elpi Accumulate lp:{{
   handleExpression (cfg _ _ _ _ PGs _) _ (global Prim) {{ ePrim lp:CPrim (@nil Expression) }} :-
     coq.gref.map.find Prim PGs (pgPrimitive CPrim), !.
   handleExpression (cfg _ _ _ _ PGs _ as Cfg) _ (app (global Prim :: Args)) {{ ePrim lp:CPrim lp:CArgs }} :-
-    coq.gref.map.find Prim PGs (pgPrimitive CPrim),
-    CPrim = app [{{MkPrimitive}}, STyp, _, _],
+    if (coq.gref.map.find Prim PGs (pgPrimitive CPrim))
+       (CPrim = app [{{MkPrimitive}}, STyp, _, _])
+       (coq.error "Cannot find a primitive named" {coq.term->string (global Prim)}),
     !,
     handleSubExpressions Cfg STyp Args CArgs.
   handleExpression (cfg _ _ _ _ PGs _) _ (global (const _ as C)) {{ eGlobal lp:CTyp lp:Id (@nil Expression) }} :-
@@ -244,7 +246,7 @@ Elpi Accumulate lp:{{
     !,
     resolveCompilableType Cfg Typ CTyp,
     int->pos I J.
-  handleExpression _ Typ Trm _ :- coq.say "Fail with expression" Typ Trm, fail.
+  handleExpression _ _ Trm _ :- coq.error "Cannot convert expression" Trm.
 
   pred handleSubExpressions i:configuration, i:term, i:list term, o:term.
   :if "trace_handleSubExpressions" handleSubExpressions _ _ X _ :- coq.say "handleSubExpressions:" { std.map coq.term->string X }, fail.
@@ -300,7 +302,8 @@ Elpi Accumulate lp:{{
     !,
     int->pos I LI,
     K is I + 1,
-    resolveCompilableType Cfg Typ CTyp,
+    ( resolveCompilableType Cfg Typ CTyp ;
+      coq.error "Cannot translate type" { coq.term->string Typ } "for variable" Z ),
     handleStatement Cfg X K (Z::XNs) Y L YNs,
     handleStatement Cfg (B (localid I)) L YNs C J ZNs,
     if-verbose-info (coq.say "INFO: bind statement handled").
@@ -356,11 +359,11 @@ Elpi Accumulate lp:{{
       resolveConst C C3,
       resolveId Cfg C GId _,
       if (M = {{ true }})
-         ( if-verbose-info (coq.say "INFO: Starting derivation of function" Name),
+         ( if-verbose-info (coq.say "INFO: Starting derivation of function" { coq.term->string C }),
            handleFixAndFun Cfg Name C3 1 [] C4 _ Ns FoNF, C2 = {{ @Some Statement lp:C4 }}, names->coqliststring Ns LNs )
-         ( if-verbose-info (coq.say "INFO: Starting derivation of expression" Name),
+         ( if-verbose-info (coq.say "INFO: Starting derivation of expression" { coq.term->string C }),
            handleExpression Cfg T C3 C4, C2 = {{ @Some Expression lp:C4 }}, LNs = {{ @nil string }}, FoNF = {{ Nofix }} ),
-      if-verbose-info (coq.say "INFO:" Name "derived").
+      if-verbose-info (coq.say "INFO:" { coq.term->string C } "derived").
 
   pred reGlobal i:gref, o:term.
   reGlobal G (global G).
