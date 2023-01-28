@@ -13,6 +13,26 @@ It will probably fail on your example, but you are most welcome to
 send bug reports.
 
 
+##  License
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+See the [full license](LICENSE) for details.
+
+
+##  Copyright
+
+dx is Copyright Université de Lille and CNRS.
+
+
 ##  Overview
 
 This derivation is performed in two steps, with an _Intermediate
