@@ -1,7 +1,7 @@
 ##########################################################################
 #  This file is part of dx, a tool to derive C from monadic Gallina.     #
 #                                                                        #
-#  Copyright (C) 2021 Université de Lille & CNRS                         #
+#  Copyright (C) 2024 Université de Lille & CNRS                         #
 #                                                                        #
 #  This program is free software; you can redistribute it and/or modify  #
 #  it under the terms of the GNU General Public License as published by  #
