@@ -1,0 +1,75 @@
+{
+    "@context": [
+        "https:\/\/doi.org\/doi:10.5063\/schema\/codemeta-2.0",
+        "http:\/\/schema.org"
+    ],
+    "@type": "SoftwareSourceCode",
+    "name": "dx",
+    "description": "dx is a tool to derive (hence the name) C code from a monadic Gallina code that looks very much like the final C code. To be more precise, the end result is the abstract syntax tree for C as defined by the module Csyntax of the CompCert compiler.",
+    "dateCreated": "2021-07-21",
+    "datePublished": "2024-01-30",
+    "license": [
+        "GNU General Public License v2.0 or later"
+    ],
+    "url": "https:\/\/hal.science\/hal-04426826",
+    "identifier": [],
+    "applicationCategory": [
+        "info"
+    ],
+    "keywords": [
+        "Computer Science",
+        "Provable Security",
+        "Security",
+        "Formal Methods"
+    ],
+    "institution": [
+        "Universit\u00e9 de Lille",
+        "CNRS"
+    ],
+    "codeRepository": "https:\/\/github.com\/2xs\/dx",
+    "relatedLink": [
+        "https:\/\/github.com\/2xs\/pipcore",
+        "https:\/\/github.com\/2xs\/pipcore-mpu",
+        "https:\/\/github.com\/AbsInt\/CompCert"
+    ],
+    "programmingLanguage": [
+        "Coq",
+        "Makefile",
+        "OCaml",
+        "C"
+    ],
+    "runtimePlatform": [
+        "CompCert",
+        "CoqIDE",
+        "Coq"
+    ],
+    "operatingSystem": [
+        "GNU\/Linux",
+        "MacOS"
+    ],
+    "version": "1",
+    "softwareVersion": "1.0.0",
+    "dateModified": "2024-01-30",
+    "developmentStatus": "Actif",
+    "referencePublication": {
+        "hal": "hal-03888082"
+    },
+    "author": [
+        {
+            "@type": "Role",
+            "roleName": "aut",
+            "author": {
+                "@type": "Person",
+                "@id": null,
+                "givenName": "Samuel",
+                "familyName": "Hym",
+                "affiliation": [
+                    {
+                        "@type": "Organization",
+                        "name": "CRIStAL"
+                    }
+                ]
+            }
+        }
+    ]
+}
