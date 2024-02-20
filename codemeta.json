@@ -57,7 +57,15 @@
             "affiliation": [
                 {
                     "@type": "Organization",
+                    "name": "Université de Lille"
+                },
+                {
+                    "@type": "Organization",
                     "name": "CRIStAL"
+                },
+                {
+                    "@type": "Organization",
+                    "name": "2XS"
                 }
             ]
         }
