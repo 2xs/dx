@@ -1,7 +1,6 @@
 {
     "@context": [
-        "https:\/\/doi.org\/doi:10.5063\/schema\/codemeta-2.0",
-        "http:\/\/schema.org"
+        "https:\/\/doi.org\/10.5063\/schema\/codemeta-2.0"
     ],
     "@type": "SoftwareSourceCode",
     "name": "dx",
@@ -9,7 +8,7 @@
     "dateCreated": "2021-07-21",
     "datePublished": "2024-01-30",
     "license": [
-        "GNU General Public License v2.0 or later"
+        "https://spdx.org/licenses/CECILL-2.1"
     ],
     "url": "https:\/\/hal.science\/hal-04426826",
     "identifier": [],
@@ -21,10 +20,6 @@
         "Provable Security",
         "Security",
         "Formal Methods"
-    ],
-    "institution": [
-        "Universit\u00e9 de Lille",
-        "CNRS"
     ],
     "codeRepository": "https:\/\/github.com\/2xs\/dx",
     "relatedLink": [
@@ -56,20 +51,16 @@
     },
     "author": [
         {
-            "@type": "Role",
-            "roleName": "aut",
-            "author": {
-                "@type": "Person",
-                "@id": null,
-                "givenName": "Samuel",
-                "familyName": "Hym",
-                "affiliation": [
-                    {
-                        "@type": "Organization",
-                        "name": "CRIStAL"
-                    }
-                ]
-            }
+            "@type": "Person",
+            "@id": null,
+            "givenName": "Samuel",
+            "familyName": "Hym",
+            "affiliation": [
+                {
+                    "@type": "Organization",
+                    "name": "CRIStAL"
+                }
+            ]
         }
     ]
 }
