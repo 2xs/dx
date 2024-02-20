@@ -52,7 +52,6 @@
     "author": [
         {
             "@type": "Person",
-            "@id": null,
             "givenName": "Samuel",
             "familyName": "Hym",
             "affiliation": [
