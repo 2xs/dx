@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-Require Import List.
+From Stdlib Require Import List.
 Import ListNotations.
 
 From compcert.cfrontend Require Csyntax Ctypes Cop.

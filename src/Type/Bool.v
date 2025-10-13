@@ -14,10 +14,10 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-Require Import List.
+From Stdlib Require Import List.
 Import ListNotations.
 
-From Coq Require Bool.Bool.
+From Stdlib Require Bool.Bool.
 
 From compcert.cfrontend Require Csyntax Ctypes Cop.
 From compcert.common Require Values.

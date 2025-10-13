@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import List.
+From Stdlib Require Import List.
 From compcert.common Require Errors.
 
 Declare Scope result_monad_scope.

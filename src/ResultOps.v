@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import List.
+From Stdlib Require Import List.
 From compcert.common Require Errors.
 
 From dx Require Import ResultMonad.

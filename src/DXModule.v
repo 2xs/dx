@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import String.
+From Stdlib Require Import String.
 
 From compcert.common Require AST.
 From compcert.cfrontend Require Csyntax Ctypes.

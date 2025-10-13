@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import BinNums List String Nat.
+From Stdlib Require Import BinNums List String Nat.
 From compcert.cfrontend Require Csyntax Ctypes.
 
 From dx Require Import ResultMonad.

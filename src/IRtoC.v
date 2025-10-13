@@ -14,8 +14,8 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import List ZArith.
-From Coq Require String.
+From Stdlib Require Import List ZArith.
+From Stdlib Require String.
 
 From compcert.common Require AST.
 From compcert.cfrontend Require Csyntax Ctypes.
@@ -75,8 +75,7 @@ Definition callingConventionSymbol (ty: CompilableSymbolType) : AST.calling_conv
 
 Definition functionType (ty: CompilableSymbolType) : Ctypes.type :=
   let argTyps := map cType (compilableSymbolArgTypes ty) in
-  let argTyps' := fold_right Ctypes.Tcons Ctypes.Tnil argTyps in
-  Ctypes.Tfunction argTyps' (returnCType ty) (callingConventionSymbol ty).
+  Ctypes.Tfunction argTyps (returnCType ty) (callingConventionSymbol ty).
 
 Fixpoint zipWith3 {A B C D: Type} (f: A -> B -> C -> D) (xs: list A) (ys: list B) (zs: list C) : Result (list D) :=
   match (xs, ys, zs) with
@@ -196,7 +195,7 @@ Definition convertSymbol (offsetLocals: LocalId) (sym: IRSymbol) : Result (Globa
       let funct := Csyntax.mkfunction retCTy cc args vars body' in
       Ok (id, AST.Gfun (Ctypes.Internal funct))
   | MkIRSymbol _ _ _ true _ None _ =>
-      let argSigTys := map Ctypes.typ_of_type argCTys in
+      let argSigTys := map Ctypes.argtype_of_type argCTys in
       let retSigTy := Ctypes.rettype_of_type retCTy in
       let sig := AST.mksignature argSigTys retSigTy cc in
 
@@ -204,7 +203,7 @@ Definition convertSymbol (offsetLocals: LocalId) (sym: IRSymbol) : Result (Globa
       Ok (id,
           AST.Gfun (Ctypes.External
                       (AST.EF_external (irSymbolName sym) sig)
-                      (fold_right Ctypes.Tcons Ctypes.Tnil argCTys)
+                      argCTys
                       retCTy
                       cc))
   | MkIRSymbol _ _ _ false _ (Some _) _ =>

@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-Require Import BinNums List Ascii String Nat.
+From Stdlib Require Import BinNums List Ascii String Nat.
 From elpi Require Import elpi.
 
 Require Import IR.
@@ -249,7 +249,7 @@ Elpi Accumulate lp:{{
   handleExpression _ _ Trm _ :- coq.error "Cannot convert expression" Trm.
 
   pred handleSubExpressions i:configuration, i:term, i:list term, o:term.
-  :if "trace_handleSubExpressions" handleSubExpressions _ _ X _ :- coq.say "handleSubExpressions:" { std.map coq.term->string X }, fail.
+  :if "trace_handleSubExpressions" handleSubExpressions _ _ X _ :- coq.say "handleSubExpressions:" { std.map X coq.term->string }, fail.
   handleSubExpressions Cfg STyp Args CArgs :-
     resolveConst STyp (app [{{ MkCompilableSymbolType }}, ArgTyps, _]),
     resolveConst ArgTyps LArgs,
@@ -442,7 +442,7 @@ Elpi Accumulate lp:{{
   buildTermTypeMaps PreCfg I PGs CMs (fullModule MP :: Ts) J PGs2 CMs2 Exps :-
     !,
     coq.env.module MP GRs,
-    std.filter GRs isConst GRs2,
+    std.map-filter GRs (x\r\x = gref r, isConst r) GRs2,
     std.map GRs2 reGlobal GRs3,
     buildTermTypeMaps PreCfg I PGs CMs GRs3 K PGs3 CMs3 Exps3,
     !,
@@ -482,5 +482,4 @@ Elpi Accumulate lp:{{
              if-verbose-info (coq.say "INFO: Symbols typechecked"),
              coq.env.add-const Res CoqIRSyms Typ _ _).
 }}.
-Elpi Typecheck.
 Elpi Export GenerateIntermediateRepresentation.
