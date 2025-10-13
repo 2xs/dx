@@ -3,7 +3,7 @@ name: "dx"
 version: "~dev"
 synopsis: "Derive C code from Monadic Gallina"
 maintainer: "Samuel Hym <samuel.hym@univ-lille.fr>"
-authors: "Samuel Hym <samuel.hym@univ-lille.fr>"
+authors: "Samuel Hym <samuel.hym@univ-lille.fr>, Florian Vanhems <florian.vanhems@univ-lille.fr>"
 license: "GPL-2.0-or-later"
 depends: [
   "coq" {>= "8.13"}
