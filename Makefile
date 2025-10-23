@@ -217,7 +217,7 @@ clean:
 	rm -f */*.glob */*.vo */*.vok */*.vos */.*.aux */*/*.glob */*/*.vo */*/*.vok */*/*.vos */*/.*.aux
 	rm -f extr/*.ml extr/*.mli tests/*.ml tests/*.mli
 	rm -f */*.cmi */*.cmx */*.o
-	rm -f tests/compcert.ini tests/main tests/generated.c tests/main-after-install
+	rm -f tests/compcert.ini tests/main tests/generated.c tests/generated.h tests/main-after-install
 	rm -f compcertsrc-I compcertcprinter-cmx-args compcertcprinter-cmi
 	rm -f cprinter-inc-args cprinter-link-args
 	rm -f compcertcprinter.cmxa compcertcprinter.a
