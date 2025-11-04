@@ -430,6 +430,26 @@ Elpi Accumulate lp:{{
     oneBuildTermTypeMaps PreCfg I PGs CMs ExpSym J PGs2 CMs2 Exp,
     !.
 
+  func grefs-from-list-module-item i:list module-item, o:list gref.
+  % Base case: if there is no more module items to process,
+  % return an empty list of gref.
+  grefs-from-list-module-item [] [].
+  % If the module-item is a gref, add it to the output list
+  % and recursively handle the remaining module-items
+  grefs-from-list-module-item [gref GR | MIs] [GR | GRs] :- !,
+    grefs-from-list-module-item MIs GRs.
+  % If the module-item is a submodule,
+  % get the grefs from that submodule by making a recursive call, add them to the output list
+  % recursively handle the remaining module-items
+  grefs-from-list-module-item [submodule _ SMIs | MIs] GRs :- !,
+    grefs-from-list-module-item SMIs SMGRs,
+    grefs-from-list-module-item MIs  MGRs,
+    std.append SMGRs MGRs GRs.
+  % Otherwise, just skip the module-item
+  grefs-from-list-module-item [DMI | MIs] GRs :-
+    coq.warning "dx" "dx.discarded-module-item" "Discarded module-item" MI,
+    grefs-from-list-module-item MIs GRs.
+
   % index on list?
   % buildTermTypeMaps firstFreshGlobalId startPrimGlobMap
   pred buildTermTypeMaps i:configuration,
@@ -441,8 +461,9 @@ Elpi Accumulate lp:{{
     buildTermTypeMaps (cfg M B R {{ false }} PGs CMs) I PG1s CM1s Ts J PG2s CM2s Exps.
   buildTermTypeMaps PreCfg I PGs CMs (fullModule MP :: Ts) J PGs2 CMs2 Exps :-
     !,
-    coq.env.module MP GRs,
-    std.map-filter GRs (x\r\x = gref r, isConst r) GRs2,
+    coq.env.module MP MIs,
+    grefs-from-list-module-item MIs GRs,
+    std.filter GRs isConst GRs2,
     std.map GRs2 reGlobal GRs3,
     buildTermTypeMaps PreCfg I PGs CMs GRs3 K PGs3 CMs3 Exps3,
     !,
