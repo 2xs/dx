@@ -20,6 +20,7 @@ tests/*.mli
 /cprinter-args
 /tests/compcert.ini
 /tests/generated.c
+/tests/generated.h
 /tests/main
 /tests/main-after-install
 
