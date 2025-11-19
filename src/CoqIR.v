@@ -447,7 +447,7 @@ Elpi Accumulate lp:{{
     std.append SMGRs MGRs GRs.
   % Otherwise, just skip the module-item
   grefs-from-list-module-item [DMI | MIs] GRs :-
-    coq.warning "dx" "dx.discarded-module-item" "Discarded module-item" MI,
+    coq.warning "dx" "dx.discarded-module-item" "Discarded module-item" DMI,
     grefs-from-list-module-item MIs GRs.
 
   % index on list?
