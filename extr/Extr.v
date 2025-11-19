@@ -14,8 +14,8 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import String.
-From Coq Require Export Extraction ExtrOcamlBasic ExtrOcamlString.
+From Stdlib Require Import String.
+From Stdlib Require Export Extraction ExtrOcamlBasic ExtrOcamlString.
 
 From dx Require Import ResultMonad DXModule.
 

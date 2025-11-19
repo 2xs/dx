@@ -14,7 +14,7 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import List String.
+From Stdlib Require Import List String.
 Import List.ListNotations.
 Open Scope string.
 

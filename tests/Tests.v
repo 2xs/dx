@@ -14,8 +14,8 @@
 (*  GNU General Public License for more details.                          *)
 (**************************************************************************)
 
-From Coq Require Import BinNums List Ascii String Nat ZArith.
-From Coq Require Import Numbers.AltBinNotations.
+From Stdlib Require Import BinNums List Ascii String Nat ZArith.
+From Stdlib Require Import Numbers.AltBinNotations.
 Import List.ListNotations.
 
 From compcert.cfrontend Require Csyntax Ctypes.
