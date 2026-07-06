@@ -27,8 +27,7 @@ open PrintCsyntax
 open ResultMonad
 open DXModule
 
-let register_string (a,s) =
-    let s = camlstring_of_coqstring s in
+let register_string (a, s) =
     match Hashtbl.find_opt string_of_atom a with
     | None -> let s = if Hashtbl.mem atom_of_string s
                       then s ^ "$" ^ Z.to_string (Z.Zpos a)
@@ -65,12 +64,11 @@ let print_dx_modules mods =
         | Ok m ->
             ( assert (Hashtbl.length atom_of_string == 0) ;
               assert (Hashtbl.length string_of_atom == 0) ;
-              let p = camlstring_of_coqstring path in
-              let h = Filename.extension p = ".h" in
-              let o = open_out p in
+              let h = Filename.extension path = ".h" in
+              let o = open_out path in
               let f = Format.formatter_of_out_channel o in
               List.iter register_string m.dxModuleNames ;
-              if h then print_begin_guard f p ;
+              if h then print_begin_guard f path ;
               print_program f m.dxModuleContent ;
               if h then print_end_guard f ;
               close_out o ;

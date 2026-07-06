@@ -15,7 +15,7 @@
 (**************************************************************************)
 
 From Stdlib Require Import String.
-From Stdlib Require Export Extraction ExtrOcamlBasic ExtrOcamlString.
+From Stdlib Require Export Extraction ExtrOcamlBasic ExtrOcamlNativeString.
 
 From dx Require Import ResultMonad DXModule.
 
