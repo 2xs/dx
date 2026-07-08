@@ -113,9 +113,9 @@ To install dx, you will require:
     dx is tested only with GNU Make (which is required by CompCert),
     preferably at least version 4.3 for its “grouped targets” feature
     (required to use parallelism reliably),
--   Coq
--   [coq-elpi]
--   CompCert (version 3.10)
+-   Rocq
+-   [rocq-elpi]
+-   CompCert (version 3.17)
 -   OCaml compiler; currently the `Makefile` assumes you use the
     native compiler, no recipe is written for bytecode compilation.
 
@@ -125,12 +125,13 @@ dx is currently developed with the following versions of these
 dependencies:
 
 ```
-$ opam list ocaml coq coq-elpi coq-compcert
+$ opam list ocaml menhir rocq rocq-elpi coq-compcert
 # Name       # Installed # Synopsis
-coq          8.15.0      Formal proof management system
-coq-compcert 3.10        The CompCert C compiler (64 bit)
-coq-elpi     1.13.0      Elpi extension language for Coq
-ocaml        4.12.1      The OCaml compiler (virtual package)
+coq-compcert 3.17        The CompCert C compiler (64 bit)
+menhir       20260209    An LR(1) parser generator
+ocaml        4.14.3      The OCaml compiler (virtual package)
+rocq-core    9.1.1       The Rocq Prover with its prelude
+rocq-elpi    3.3.1       Elpi extension language for Coq
 ```
 
 CompCert and Coq-Elpi must be installed where Coq can find them. That
@@ -162,15 +163,15 @@ space, you can then install dependencies with:
 opam repository add coq-released https://coq.inria.fr/opam/released
 
 # and then
-opam install -b coq coq-elpi coq-compcert
+opam install -b rocq rocq-elpi coq-compcert=3.17
 ```
 
 If you’d rather spare some disk, you can set `-b` only for CompCert:
 
 ```
-opam install coq coq-elpi
-opam install --deps-only coq-compcert
-opam install -b coq-compcert
+opam install rocq=9.1.1 rocq-elpi=3.3.1 menhir=20260209
+opam install --deps-only coq-compcert=3.17
+opam install -b coq-compcert=3.17
 ```
 
 Note that if you install the `coq-compcert-32` opam package, it will
