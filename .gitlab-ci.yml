@@ -1,10 +1,21 @@
 image: "fvanhems/dx:compcert3.17-4.14"
 test:
   stage: test
-
   before_script:
     - git config --global --add safe.directory $CI_PROJECT_DIR
   script:
     - opam pin .
     - ./configure
     - make test
+
+    # Copy artifacts inside the repository (won't get uploaded otherwise)
+    - ARTIFACTS=$PWD/dx-and-deps
+    - mkdir -p $ARTIFACTS
+    - cd $(opam var lib)
+    - rsync -rptR coq/user-contrib/Flocq coq/user-contrib/compcert coq/user-contrib/elpi coq/user-contrib/elpi_elpi ppx_deriving coq/user-contrib/dx dx re elpi menhirLib stdlib-shims rocq-elpi --exclude=*.v --exclude=coq/user-contrib/elpi/apps/* $ARTIFACTS
+  artifacts:
+    name: "dx-and-deps" 
+    paths:
+      - dx-and-deps
+    expire_in: 1 week
+      
